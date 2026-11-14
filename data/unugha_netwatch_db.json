@@ -55,6 +55,14 @@
       "icon": "fa-cloud",
       "location": "Data Center Hosting & Uplink",
       "color": "#0284c7"
+    },
+    {
+      "id": "bld-mwfvf4tv",
+      "name": "Gedung Uji Unit",
+      "code": "TEST-BLD",
+      "icon": "fa-building",
+      "location": "Area Test",
+      "color": "#059669"
     }
   ],
   "devices": [
