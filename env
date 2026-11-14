@@ -1,0 +1,7 @@
+PORT=3000
+SESSION_SECRET=monitoring_unugha_secret_2026_ubah_dengan_random_string
+
+DB_HOST=localhost
+DB_USER=root
+DB_PASSWORD=
+DB_NAME=monitoring_unugha

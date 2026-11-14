@@ -1,0 +1,1841 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes, viewport-fit=cover">
+  <title>UNUGHA NetWatch - Network Monitoring & NOC Kampus</title>
+  
+  <!-- PWA & Mobile Web App Meta Tags -->
+  <link rel="manifest" href="/manifest.json">
+  <meta name="theme-color" content="#059669">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="UNUGHA NetWatch">
+  <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png">
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+  <link rel="icon" type="image/png" sizes="192x192" href="/icons/icon-192.png">
+
+  <!-- Tailwind CSS & Font Awesome Icons via CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Chart.js & Vis-Network for Topology Graph -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script type="text/javascript" src="https://unpkg.com/vis-network/standalone/umd/vis-network.min.js"></script>
+
+  <!-- Socket.io Client -->
+  <script src="/socket.io/socket.io.js"></script>
+
+  <!-- Custom Styles -->
+  <link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="bg-slate-950 text-slate-100 min-h-screen flex flex-col selection:bg-emerald-500 selection:text-white">
+
+  <!-- TOP HEADER / NAVBAR -->
+  <header class="border-b border-slate-800 bg-slate-900/80 sticky top-0 z-40 backdrop-blur-md">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between">
+      
+      <!-- Brand & Campus Title -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 text-white font-black text-lg">
+          <i class="fa-solid fa-satellite-dish"></i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-extrabold text-base md:text-lg tracking-tight text-white">UNUGHA NetWatch</h1>
+            <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">NOC v1.2</span>
+          </div>
+          <p class="text-xs text-slate-400">Universitas Nahdlatul Ulama Al Ghazali Cilacap</p>
+        </div>
+      </div>
+
+      <!-- 4 NAVIGATION MENUS ONLY: DASHBOARD, TOPOLOGI, SETTING, ADMIN -->
+      <nav class="flex items-center space-x-1 sm:space-x-2">
+        
+        <!-- 1. MENU: DASHBOARD -->
+        <div class="relative group nav-menu-group">
+          <button type="button" onclick="toggleDropdown('dropdown-dashboard')" class="px-3 py-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white hover:bg-slate-800/90 rounded-xl transition flex items-center space-x-1.5 border border-transparent hover:border-slate-700/80 focus:outline-none">
+            <i class="fa-solid fa-gauge-high text-emerald-400"></i>
+            <span>Dashboard</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 transition-transform group-hover:rotate-180"></i>
+          </button>
+          
+          <!-- Submenu Dropdown -->
+          <div id="dropdown-dashboard" class="nav-dropdown-content absolute left-0 sm:left-auto sm:right-0 md:left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900/98 border border-slate-700/80 shadow-2xl p-2 z-50 backdrop-blur-xl space-y-1">
+            <div class="px-3 py-2 border-b border-slate-800/80 text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center justify-between">
+              <span><i class="fa-solid fa-gauge-high text-emerald-400 mr-1.5"></i> Menu Dashboard</span>
+              <span class="text-emerald-400 font-mono">NOC v1.2</span>
+            </div>
+            
+            <div class="py-1 space-y-1">
+              <!-- Ringkasan Utama & Status KPI -->
+              <a href="javascript:void(0)" onclick="window.scrollTo({top: 0, behavior: 'smooth'}); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-chart-pie text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Ringkasan Utama</div>
+                  <div class="text-[10px] text-slate-400">KPI total perangkat, status UP/DOWN & latensi</div>
+                </div>
+              </a>
+
+              <!-- Scan Jaringan Button (Preserves ID btn-scan) -->
+              <button id="btn-scan" type="button" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-rotate text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Pindai Jaringan</div>
+                  <div class="text-[10px] text-slate-400">Probe ICMP real-time 24 perangkat sekarang</div>
+                </div>
+              </button>
+
+              <!-- Monitoring Bandwidth Multi-WAN -->
+              <a href="javascript:void(0)" onclick="scrollToSection('bandwidth-chart'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-tower-broadcast text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-cyan-400 transition">Monitoring Bandwidth Multi-WAN</div>
+                  <div class="text-[10px] text-slate-400">Citra, Indibiz, Starlink & Starlite (1.05 Gbps)</div>
+                </div>
+              </a>
+
+              <!-- Laporan SLA Availability -->
+              <a href="javascript:void(0)" onclick="openSlaReportModal(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-file-invoice text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-purple-400 transition">Laporan SLA Kampus</div>
+                  <div class="text-[10px] text-slate-400">Cetak dokumen resmi uptime & ekspor CSV</div>
+                </div>
+              </a>
+
+              <!-- Audio Alert Toggle (Preserves ID btn-toggle-sound) -->
+              <div class="pt-1 border-t border-slate-800/80">
+                <button id="btn-toggle-sound" type="button" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left text-xs font-semibold text-slate-300">
+                  <i class="fa-solid fa-volume-xmark text-slate-400 mr-1.5"></i> Audio: OFF
+                </button>
+              </div>
+
+              <!-- Live WebSocket Status Badge (Preserves IDs ws-indicator, ws-status-text, last-sync-time) -->
+              <div class="p-2.5 rounded-xl bg-slate-950/80 border border-slate-800/80 text-xs mt-1">
+                <div class="text-[10px] uppercase font-bold tracking-wider text-slate-500 mb-1">Status Koneksi Real-time</div>
+                <div class="flex items-center justify-between">
+                  <div class="flex items-center space-x-2">
+                    <span id="ws-indicator" class="w-2.5 h-2.5 rounded-full bg-emerald-500 pulse-up"></span>
+                    <span id="ws-status-text" class="text-slate-300 font-medium text-xs">Live Connected</span>
+                  </div>
+                  <span id="last-sync-time" class="text-slate-400 font-mono text-[11px]">-</span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2. MENU: TOPOLOGI -->
+        <div class="relative group nav-menu-group">
+          <button type="button" onclick="toggleDropdown('dropdown-topology')" class="px-3 py-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white hover:bg-slate-800/90 rounded-xl transition flex items-center space-x-1.5 border border-transparent hover:border-slate-700/80 focus:outline-none">
+            <i class="fa-solid fa-diagram-project text-cyan-400"></i>
+            <span>Topologi</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 transition-transform group-hover:rotate-180"></i>
+          </button>
+          
+          <!-- Submenu Dropdown -->
+          <div id="dropdown-topology" class="nav-dropdown-content absolute left-0 sm:left-auto sm:right-0 md:left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900/98 border border-slate-700/80 shadow-2xl p-2 z-50 backdrop-blur-xl space-y-1">
+            <div class="px-3 py-2 border-b border-slate-800/80 text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center justify-between">
+              <span><i class="fa-solid fa-diagram-project text-cyan-400 mr-1.5"></i> Menu Topologi</span>
+              <span class="text-cyan-400 font-mono">Peta Kampus</span>
+            </div>
+
+            <div class="py-1 space-y-1">
+              <!-- Visualisasi Topologi Logikal -->
+              <a href="javascript:void(0)" onclick="switchViewMode('topology'); scrollToSection('view-logical-topology'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-network-wired text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Peta Topologi Logikal</div>
+                  <div class="text-[10px] text-slate-400">Grafik interaktif Vis.js: Gateway, Switch & AP</div>
+                </div>
+              </a>
+
+              <!-- Denah Spasial Gedung Kampus -->
+              <a href="javascript:void(0)" onclick="switchViewMode('spatial'); scrollToSection('view-spatial-campus'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-blue-950/60 border border-blue-500/30 flex items-center justify-center text-blue-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-map-location-dot text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-blue-400 transition">Denah Spasial Kampus</div>
+                  <div class="text-[10px] text-slate-400">Sebaran fisik Rektorat, FTI, FSI, FKIP, Perpus</div>
+                </div>
+              </a>
+
+              <!-- Demo Failover Simulation (Preserves ID btn-demo-failover) -->
+              <button id="btn-demo-failover" type="button" onclick="triggerDemoFailover(); closeAllDropdowns();" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-amber-950/40 border border-transparent hover:border-amber-500/30 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-bolt text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-amber-300 group-hover/item:text-amber-200 transition">Simulasi Failover Multi-WAN</div>
+                  <div class="text-[10px] text-slate-400">Uji kabel putus & otomatisasi failover jalur</div>
+                </div>
+              </button>
+
+              <!-- Unduh Gambar Topologi PNG -->
+              <a href="javascript:void(0)" onclick="exportTopologyImage(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-camera text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-purple-400 transition">Unduh Diagram PNG</div>
+                  <div class="text-[10px] text-slate-400">Export peta topologi untuk dokumentasi NOC</div>
+                </div>
+              </a>
+
+              <!-- Grafik Tren Latensi -->
+              <a href="javascript:void(0)" onclick="scrollToSection('latency-chart'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-sky-950/60 border border-sky-500/30 flex items-center justify-center text-sky-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-chart-line text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-sky-400 transition">Tren Latensi Real-time</div>
+                  <div class="text-[10px] text-slate-400">Grafik pergerakan RTT ping millisecond</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3. MENU: SETTING -->
+        <div class="relative group nav-menu-group">
+          <button type="button" onclick="toggleDropdown('dropdown-setting')" class="px-3 py-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white hover:bg-slate-800/90 rounded-xl transition flex items-center space-x-1.5 border border-transparent hover:border-slate-700/80 focus:outline-none">
+            <i class="fa-solid fa-sliders text-amber-400"></i>
+            <span>Setting</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 transition-transform group-hover:rotate-180"></i>
+          </button>
+          
+          <!-- Submenu Dropdown -->
+          <div id="dropdown-setting" class="nav-dropdown-content absolute right-0 md:right-auto md:left-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900/98 border border-slate-700/80 shadow-2xl p-2 z-50 backdrop-blur-xl space-y-1">
+            <div class="px-3 py-2 border-b border-slate-800/80 text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center justify-between">
+              <span><i class="fa-solid fa-sliders text-amber-400 mr-1.5"></i> Menu Setting</span>
+              <span class="text-amber-400 font-mono">Konfigurasi</span>
+            </div>
+
+            <div class="py-1 space-y-1">
+              <!-- Pengaturan Monitoring & Alerting -->
+              <a href="javascript:void(0)" onclick="scrollToSection('form-settings'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-amber-950/60 border border-amber-500/30 flex items-center justify-center text-amber-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-gear text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-amber-400 transition">Parameter Monitoring</div>
+                  <div class="text-[10px] text-slate-400">Interval ping, timeout & ambang batas latensi</div>
+                </div>
+              </a>
+
+              <!-- Konsol Diagnostik Button -->
+              <a href="javascript:void(0)" onclick="openModal('modal-diagnostics'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-sky-950/60 border border-sky-500/30 flex items-center justify-center text-sky-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-terminal text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-sky-400 transition">Konsol Diagnostik</div>
+                  <div class="text-[10px] text-slate-400">Ping ICMP, DNS check & diagnostik web</div>
+                </div>
+              </a>
+
+              <!-- Notifikasi Telegram Bot -->
+              <a href="javascript:void(0)" onclick="scrollToSection('form-settings'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-cyan-950/60 border border-cyan-500/30 flex items-center justify-center text-cyan-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-brands fa-telegram text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-cyan-400 transition">Notifikasi Telegram NOC</div>
+                  <div class="text-[10px] text-slate-400">Pengaturan token bot & broadcast alert group</div>
+                </div>
+              </a>
+
+              <!-- Kelola & Tambah Gedung Kampus -->
+              <a href="javascript:void(0)" onclick="openAddBuildingModal(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-building text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Tambah Gedung Kampus</div>
+                  <div class="text-[10px] text-slate-400">Konfigurasi lokasi gedung & zona instalasi</div>
+                </div>
+              </a>
+
+              <!-- Log Insiden & Downtime -->
+              <a href="javascript:void(0)" onclick="scrollToSection('incidents-container'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-clock-rotate-left text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-purple-400 transition">Riwayat Log Insiden</div>
+                  <div class="text-[10px] text-slate-400">Catatan waktu putus & rekonsiliasi NOC</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. MENU: ADMIN -->
+        <div class="relative group nav-menu-group">
+          <button type="button" onclick="toggleDropdown('dropdown-admin')" class="px-3 py-2 text-xs sm:text-sm font-bold text-slate-200 hover:text-white hover:bg-slate-800/90 rounded-xl transition flex items-center space-x-1.5 border border-transparent hover:border-slate-700/80 focus:outline-none">
+            <i class="fa-solid fa-user-shield text-purple-400"></i>
+            <span>Admin</span>
+            <i class="fa-solid fa-chevron-down text-[10px] text-slate-400 ml-1 transition-transform group-hover:rotate-180"></i>
+          </button>
+          
+          <!-- Submenu Dropdown -->
+          <div id="dropdown-admin" class="nav-dropdown-content absolute right-0 mt-2 w-72 sm:w-80 rounded-2xl bg-slate-900/98 border border-slate-700/80 shadow-2xl p-2 z-50 backdrop-blur-xl space-y-1">
+            <div class="px-3 py-2 border-b border-slate-800/80 text-[10px] uppercase font-bold tracking-wider text-slate-400 flex items-center justify-between">
+              <span><i class="fa-solid fa-user-shield text-purple-400 mr-1.5"></i> Menu Administrasi</span>
+              <span id="session-header-badge" class="text-emerald-400 font-mono">Autentikasi</span>
+            </div>
+
+            <div class="py-1 space-y-1">
+              <!-- Active User Profile Card (Preserves IDs user-display-name, user-display-role) -->
+              <div onclick="promptSessionExit(); closeAllDropdowns();" class="p-2.5 rounded-xl bg-slate-950/70 border border-slate-800/80 hover:border-emerald-500/40 cursor-pointer transition flex items-center justify-between" title="Klik untuk cek status sesi autentikasi">
+                <div class="flex items-center space-x-2.5 overflow-hidden">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-600/20 border border-emerald-500/30 flex items-center justify-center text-emerald-300 text-xs flex-shrink-0">
+                    <i class="fa-solid fa-user-shield"></i>
+                  </div>
+                  <div class="overflow-hidden">
+                    <div id="user-display-name" class="text-xs font-bold text-slate-200 truncate">Ahmad Fauzi</div>
+                    <div class="flex items-center space-x-1.5 mt-0.5">
+                      <span id="user-display-role" class="text-[10px] text-emerald-400 font-mono font-semibold">ADMIN_NOC</span>
+                      <span class="text-slate-600">&bull;</span>
+                      <span id="session-status-text" class="text-[9px] text-emerald-400 font-medium flex items-center"><span class="w-1.5 h-1.5 rounded-full bg-emerald-400 mr-1 animate-pulse"></span> Sesi Aktif</span>
+                    </div>
+                  </div>
+                </div>
+                <span class="text-[10px] text-slate-400 flex-shrink-0 ml-1">Sesi <i class="fa-solid fa-chevron-right text-[8px] ml-0.5"></i></span>
+              </div>
+
+              <!-- Menu Login Admin & NOC -->
+              <a href="javascript:void(0)" onclick="openLoginModal(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-key text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Login Admin / Ganti Akun</div>
+                  <div class="text-[10px] text-slate-400">Autentikasi kredensial Admin NOC & Hak Akses</div>
+                </div>
+              </a>
+
+              <!-- Opsi Autentikasi: Tetap di Aplikasi -->
+              <a href="javascript:void(0)" onclick="stayInApp(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-sky-950/60 border border-sky-500/30 flex items-center justify-center text-sky-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-shield-halved text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-sky-400 transition">Tetap di Aplikasi</div>
+                  <div class="text-[10px] text-slate-400">Pertahankan & kunci sesi aktif di perangkat ini</div>
+                </div>
+              </a>
+
+              <!-- Opsi Autentikasi: Keluar dari Aplikasi (Logout) -->
+              <a href="javascript:void(0)" onclick="promptSessionExit(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-red-950/30 border border-transparent hover:border-red-500/30 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-right-from-bracket text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-red-300 group-hover/item:text-red-200 transition">Keluar dari Aplikasi (Logout)</div>
+                  <div class="text-[10px] text-slate-400">Akhiri sesi kerja & logout dengan aman</div>
+                </div>
+              </a>
+
+              <div class="pt-1 border-t border-slate-800/80"></div>
+
+              <!-- Ganti Peran Pengguna (RBAC Switcher) -->
+              <a href="javascript:void(0)" onclick="openModal('modal-switch-user'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-purple-950/60 border border-purple-500/30 flex items-center justify-center text-purple-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-users-gear text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-purple-400 transition">Beralih Peran (RBAC)</div>
+                  <div class="text-[10px] text-slate-400">Admin NOC &bull; Teknisi &bull; Pimpinan Rektorat</div>
+                </div>
+              </a>
+
+              <!-- Tambah Perangkat Baru (Preserves ID btn-add-device-modal) -->
+              <button id="btn-add-device-modal" type="button" onclick="openModal('modal-add-device'); closeAllDropdowns();" class="w-full flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-emerald-950/60 border border-emerald-500/30 flex items-center justify-center text-emerald-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-plus-circle text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-emerald-400 transition">Tambah Perangkat</div>
+                  <div class="text-[10px] text-slate-400">Daftarkan Router, Switch, AP, atau Server</div>
+                </div>
+              </button>
+
+              <!-- Kelola Akun & Pengguna -->
+              <a href="javascript:void(0)" onclick="openUserManagementModal(); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-blue-950/60 border border-blue-500/30 flex items-center justify-center text-blue-400 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-user-gear text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-blue-400 transition">Kelola Akun Pengguna</div>
+                  <div class="text-[10px] text-slate-400">Tambah, ubah, dan atur hak akses staf</div>
+                </div>
+              </a>
+
+              <!-- Daftar Inventaris Lengkap -->
+              <a href="javascript:void(0)" onclick="scrollToSection('devices-tbody'); closeAllDropdowns();" class="flex items-center space-x-3 p-2.5 rounded-xl hover:bg-slate-800/80 transition text-left cursor-pointer group/item">
+                <div class="w-8 h-8 rounded-lg bg-slate-800 border border-slate-700 flex items-center justify-center text-slate-300 flex-shrink-0 group-hover/item:scale-105 transition">
+                  <i class="fa-solid fa-list-check text-sm"></i>
+                </div>
+                <div>
+                  <div class="text-xs font-bold text-slate-200 group-hover/item:text-slate-100 transition">Inventaris 24 Perangkat</div>
+                  <div class="text-[10px] text-slate-400">Tabel live status, IP, edit & hapus data</div>
+                </div>
+              </a>
+            </div>
+          </div>
+        </div>
+
+        <!-- DOWNLOAD MOBILE APP / APK BUTTON -->
+        <button type="button" onclick="openDownloadAppModal()" class="flex items-center space-x-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white text-xs font-bold shadow-lg shadow-emerald-900/40 transition border border-emerald-400/30">
+          <i class="fa-solid fa-mobile-screen-button text-xs"></i>
+          <span class="hidden sm:inline">Download App</span>
+          <span class="inline sm:hidden">App</span>
+        </button>
+
+      </nav>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex-1 w-full space-y-6">
+
+    <!-- KPI STATS CARDS -->
+    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+      
+      <!-- Total Devices -->
+      <div class="glass-panel p-4 rounded-xl border border-slate-800">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>Total Perangkat</span>
+          <i class="fa-solid fa-network-wired text-slate-500"></i>
+        </div>
+        <div id="stat-total" class="text-2xl font-black text-slate-100">0</div>
+        <div class="text-[11px] text-slate-500 mt-1">Terdaftar di sistem</div>
+      </div>
+
+      <!-- Online (UP) -->
+      <div class="glass-panel p-4 rounded-xl border border-slate-800">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>Status Normal (UP)</span>
+          <i class="fa-solid fa-circle-check text-emerald-400"></i>
+        </div>
+        <div id="stat-up" class="text-2xl font-black text-emerald-400">0</div>
+        <div class="text-[11px] text-emerald-500/80 mt-1">Koneksi prima</div>
+      </div>
+
+      <!-- Warning -->
+      <div class="glass-panel p-4 rounded-xl border border-slate-800">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>Peringatan (Degradasi)</span>
+          <i class="fa-solid fa-triangle-exclamation text-amber-400"></i>
+        </div>
+        <div id="stat-warning" class="text-2xl font-black text-amber-400">0</div>
+        <div class="text-[11px] text-amber-500/80 mt-1">Latensi tinggi</div>
+      </div>
+
+      <!-- Down -->
+      <div id="card-down" class="glass-panel p-4 rounded-xl border border-slate-800 transition">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>Gangguan (DOWN)</span>
+          <i class="fa-solid fa-circle-xmark text-red-400"></i>
+        </div>
+        <div id="stat-down" class="text-2xl font-black text-red-400">0</div>
+        <div class="text-[11px] text-red-400/80 mt-1">Butuh penanganan</div>
+      </div>
+
+      <!-- Latency -->
+      <div class="glass-panel p-4 rounded-xl border border-slate-800">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>Rata-rata Latensi</span>
+          <i class="fa-solid fa-gauge-high text-cyan-400"></i>
+        </div>
+        <div id="stat-latency" class="text-2xl font-black text-cyan-400 font-mono">0 ms</div>
+        <div class="text-[11px] text-cyan-500/80 mt-1">Respons waktu ICMP</div>
+      </div>
+
+      <!-- SLA Uptime -->
+      <div class="glass-panel p-4 rounded-xl border border-slate-800">
+        <div class="text-xs text-slate-400 flex items-center justify-between mb-1">
+          <span>SLA Ketersediaan</span>
+          <i class="fa-solid fa-shield-halved text-purple-400"></i>
+        </div>
+        <div id="stat-sla" class="text-2xl font-black text-purple-400 font-mono">99.8%</div>
+        <div class="text-[11px] text-purple-500/80 mt-1">Uptime kampus</div>
+      </div>
+
+    </div>
+
+    <!-- BANDWIDTH & TRAFFIC ISP UPLINK WIDGET (4 ISP MULTI-WAN) -->
+    <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <div class="flex flex-wrap items-center gap-2">
+            <h3 class="font-bold text-base text-slate-100 flex items-center">
+              <i class="fa-solid fa-tower-broadcast text-cyan-400 mr-2"></i> Monitoring Bandwidth Multi-WAN & Gateway UNUGHA
+            </h3>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-cyan-500/20 text-cyan-400 border border-cyan-500/30">Total 1,050 Mbps Multi-WAN</span>
+            <span class="px-2 py-0.5 rounded text-[10px] font-bold bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">4 ISP Terkoneksi</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-1">
+            Load Balancer <strong>Ruijie EG1510XS</strong> (<span class="font-mono text-emerald-400 font-semibold">192.168.111.3</span>) &bull; Switch Core <strong>Mikrotik SW Rack</strong> (<span class="font-mono text-cyan-400 font-semibold">10.26.99.15</span>) &bull; <strong>16 Unit Linksys EA7500</strong>
+          </p>
+        </div>
+
+        <div class="flex items-center space-x-4 text-xs font-mono">
+          <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-cyan-400"></span>
+            <span class="text-slate-400">Total Rx (In):</span>
+            <span id="bw-current-down" class="font-bold text-cyan-300">0 Mbps</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <span class="w-3 h-3 rounded-full bg-emerald-400"></span>
+            <span class="text-slate-400">Total Tx (Out):</span>
+            <span id="bw-current-up" class="font-bold text-emerald-300">0 Mbps</span>
+          </div>
+          <div class="flex items-center space-x-1.5">
+            <span class="text-slate-400">Utilisasi:</span>
+            <span id="bw-utilization" class="font-bold text-purple-400">0%</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4 ISP MULTI-WAN LIVE BADGES -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-2.5 pt-1 text-xs">
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-cyan-500/30 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-cyan-400 font-bold flex items-center">
+              <span class="w-2 h-2 rounded-full bg-cyan-400 mr-1.5 animate-pulse"></span> ISP Citra
+            </div>
+            <div id="bw-isp-citra" class="text-xs font-mono font-bold text-slate-200 mt-0.5">35 Mbps</div>
+          </div>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-cyan-500/10 text-cyan-300 border border-cyan-500/20">100M</span>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-blue-500/30 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-blue-400 font-bold flex items-center">
+              <span class="w-2 h-2 rounded-full bg-blue-400 mr-1.5 animate-pulse"></span> ISP Indibiz
+            </div>
+            <div id="bw-isp-indibiz" class="text-xs font-mono font-bold text-slate-200 mt-0.5">80 Mbps</div>
+          </div>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-blue-500/10 text-blue-300 border border-blue-500/20">200M</span>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-purple-500/30 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-purple-400 font-bold flex items-center">
+              <span class="w-2 h-2 rounded-full bg-purple-400 mr-1.5 animate-pulse"></span> ISP Starlink
+            </div>
+            <div id="bw-isp-starlink" class="text-xs font-mono font-bold text-slate-200 mt-0.5">90 Mbps</div>
+          </div>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-purple-500/10 text-purple-300 border border-purple-500/20">Satelit</span>
+        </div>
+
+        <div class="p-2.5 rounded-xl bg-slate-900/80 border border-emerald-500/30 flex items-center justify-between">
+          <div>
+            <div class="text-[11px] text-emerald-400 font-bold flex items-center">
+              <span class="w-2 h-2 rounded-full bg-emerald-400 mr-1.5 animate-pulse"></span> ISP Starlite
+            </div>
+            <div id="bw-isp-starlite" class="text-xs font-mono font-bold text-slate-200 mt-0.5">200 Mbps</div>
+          </div>
+          <span class="px-1.5 py-0.5 rounded text-[10px] font-mono bg-emerald-500/10 text-emerald-300 border border-emerald-500/20">500M</span>
+        </div>
+      </div>
+
+      <!-- Utilization Progress Bar -->
+      <div class="w-full bg-slate-900 rounded-full h-2 overflow-hidden border border-slate-800">
+        <div id="bw-util-bar" class="bg-gradient-to-r from-cyan-500 via-emerald-500 to-purple-500 h-2 rounded-full transition-all duration-500" style="width: 35%"></div>
+      </div>
+
+      <!-- Bandwidth Chart Canvas -->
+      <div class="relative h-[220px] w-full">
+        <canvas id="bandwidth-chart"></canvas>
+      </div>
+
+      <!-- INFRASTRUCTURE HARDWARE TELEMETRY -->
+      <div class="pt-3 border-t border-slate-800/80 grid grid-cols-2 sm:grid-cols-4 gap-3 text-xs">
+        <!-- 1. Load Balancer EG1510XS -->
+        <div class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div class="text-slate-400 text-[11px] flex items-center justify-between">
+            <span>LB Ruijie EG1510XS</span>
+            <i class="fa-solid fa-server text-emerald-400"></i>
+          </div>
+          <div class="text-base font-bold text-slate-100 font-mono mt-0.5 flex items-center justify-between">
+            <span id="hw-lb-cpu">24% CPU</span>
+            <span id="hw-lb-ram" class="text-xs text-slate-400">35% RAM</span>
+          </div>
+          <div class="text-[10px] text-emerald-400 font-mono mt-1">IP: 192.168.111.3 &bull; 4 WAN UP</div>
+        </div>
+
+        <!-- 2. Mikrotik Switch Rack -->
+        <div class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div class="text-slate-400 text-[11px] flex items-center justify-between">
+            <span>Mikrotik SW Rack</span>
+            <i class="fa-solid fa-network-wired text-cyan-400"></i>
+          </div>
+          <div class="text-base font-bold text-slate-100 font-mono mt-0.5 flex items-center justify-between">
+            <span id="hw-sw-cpu">18% CPU</span>
+            <span id="hw-sw-temp" class="text-xs text-amber-400">38.6°C</span>
+          </div>
+          <div class="text-[10px] text-cyan-400 font-mono mt-1">IP: 10.26.99.15 &bull; 24G+2SFP+</div>
+        </div>
+
+        <!-- 3. Linksys EA7500 AP Fleet -->
+        <div class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div class="text-slate-400 text-[11px] flex items-center justify-between">
+            <span>Linksys EA7500 (Fleet)</span>
+            <i class="fa-solid fa-wifi text-purple-400"></i>
+          </div>
+          <div class="text-base font-bold text-slate-100 font-mono mt-0.5 flex items-center justify-between">
+            <span id="hw-ap-online">15/16 UP</span>
+            <span id="hw-ap-clients" class="text-xs text-emerald-400">482 User</span>
+          </div>
+          <div class="text-[10px] text-slate-400 mt-1">16 Unit AC1900 MU-MIMO</div>
+        </div>
+
+        <!-- 4. Server SIAKAD VM -->
+        <div class="p-2.5 rounded-xl bg-slate-900/60 border border-slate-800">
+          <div class="text-slate-400 text-[11px] flex items-center justify-between">
+            <span>Server SIAKAD (VM)</span>
+            <i class="fa-solid fa-database text-blue-400"></i>
+          </div>
+          <div class="text-base font-bold text-slate-100 font-mono mt-0.5 flex items-center justify-between">
+            <span id="hw-siakad-cpu">22% CPU</span>
+            <span id="hw-siakad-ram" class="text-xs text-slate-400">36% RAM</span>
+          </div>
+          <div id="hw-siakad-disk" class="text-[10px] text-slate-400 mt-1">44% Disk Used (Cluster VM)</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GEDUNG KAMPUS UNUGHA OVERVIEW -->
+    <div class="space-y-3">
+      <div class="flex items-center justify-between">
+        <h3 class="font-bold text-sm tracking-wide text-slate-300 uppercase flex items-center">
+          <i class="fa-solid fa-building-columns text-emerald-400 mr-2"></i> Ketersediaan Jaringan per Gedung Kampus UNUGHA
+        </h3>
+        <div class="flex items-center space-x-2">
+          <span class="text-xs text-slate-400 hidden sm:inline">Pemantauan distribusi switch & AP</span>
+          <button onclick="openAddBuildingModal()" class="px-2.5 py-1 text-xs font-bold bg-slate-800 hover:bg-slate-700 border border-slate-700 text-emerald-400 rounded-lg transition">
+            <i class="fa-solid fa-plus mr-1"></i> Tambah Gedung
+          </button>
+        </div>
+      </div>
+      <div id="buildings-container" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+    </div>
+
+    <!-- MIDDLE ROW: INTERACTIVE TOPOLOGY & REALTIME LATENCY -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Interactive Topology Map (7 cols) -->
+      <div class="lg:col-span-7 glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-3">
+          <div>
+            <h3 class="font-bold text-base text-slate-100 flex items-center">
+              <i class="fa-solid fa-diagram-project text-emerald-400 mr-2"></i> Peta Visualisasi Jaringan Kampus UNUGHA
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Topologi logikal kabel & denah spasial lokasi fisik gedung</p>
+          </div>
+
+          <!-- Switcher Tab -->
+          <div class="flex items-center space-x-1.5 p-1 bg-slate-900/80 rounded-lg border border-slate-800 self-start sm:self-auto">
+            <button id="btn-tab-topology" onclick="switchViewMode('topology')" class="px-3 py-1.5 text-xs font-bold bg-emerald-600 text-white rounded-lg transition">
+              <i class="fa-solid fa-network-wired mr-1"></i> Topologi
+            </button>
+            <button id="btn-tab-spatial" onclick="switchViewMode('spatial')" class="px-3 py-1.5 text-xs font-semibold bg-slate-800 text-slate-400 hover:text-white rounded-lg transition">
+              <i class="fa-solid fa-map-location-dot mr-1"></i> Denah Spasial
+            </button>
+            <button onclick="exportTopologyImage()" class="px-2.5 py-1.5 text-xs font-semibold bg-slate-800 text-slate-300 hover:text-white rounded-lg transition border-l border-slate-700" title="Unduh Diagram Topologi sebagai Gambar PNG">
+              <i class="fa-solid fa-camera mr-1 text-emerald-400"></i> Unduh PNG
+            </button>
+          </div>
+        </div>
+
+        <!-- VIEW 1: LOGICAL TOPOLOGY -->
+        <div id="view-logical-topology">
+          <div id="topology-canvas" class="border border-slate-800/80 rounded-xl relative">
+            <!-- Canvas for Vis.js -->
+          </div>
+          <p class="text-[11px] text-slate-500 mt-2 text-center">
+            <i class="fa-solid fa-info-circle mr-1"></i> Klik pada node perangkat untuk memeriksa detail latensi & status IP.
+          </p>
+        </div>
+
+        <!-- VIEW 2: SPATIAL CAMPUS LAYOUT -->
+        <div id="view-spatial-campus" class="hidden space-y-3">
+          <div class="p-4 rounded-xl bg-slate-900/90 border border-slate-800 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+            
+            <!-- Gedung Rektorat -->
+            <div onclick="filterByBuildingFromMap('bld-rek')" class="p-3.5 rounded-lg border border-emerald-500/40 bg-emerald-950/20 hover:border-emerald-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-emerald-300">
+                <span>Gedung Rektorat & NOC</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Core NOC, EG1510XS, SW Rack, 4 ISP</p>
+              <div class="mt-2 text-[10px] text-emerald-400 font-mono">9 Perangkat (3 AP Linksys) • 100% UP</div>
+            </div>
+
+            <!-- Gedung FTI -->
+            <div onclick="filterByBuildingFromMap('bld-fti')" class="p-3.5 rounded-lg border border-blue-500/40 bg-blue-950/20 hover:border-blue-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-blue-300">
+                <span>Gedung FTI & Lab</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Lab Komputer, Hardware & Puskom</p>
+              <div class="mt-2 text-[10px] text-blue-400 font-mono">4 Unit Linksys EA7500 • 100% UP</div>
+            </div>
+
+            <!-- Gedung FSI -->
+            <div onclick="filterByBuildingFromMap('bld-fsi')" class="p-3.5 rounded-lg border border-purple-500/40 bg-purple-950/20 hover:border-purple-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-purple-300">
+                <span>Gedung FSI</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Fakultas Syariah & Ushuluddin</p>
+              <div class="mt-2 text-[10px] text-purple-400 font-mono">2 Unit Linksys EA7500 • 100% UP</div>
+            </div>
+
+            <!-- Gedung FKIP & FE -->
+            <div onclick="filterByBuildingFromMap('bld-fkip')" class="p-3.5 rounded-lg border border-amber-500/40 bg-amber-950/20 hover:border-amber-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-amber-300">
+                <span>Gedung FKIP & FE</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Ruang Dosen & Kelas Kuliah</p>
+              <div class="mt-2 text-[10px] text-amber-400 font-mono">3 Unit Linksys EA7500 • 100% UP</div>
+            </div>
+
+            <!-- Gedung Perpustakaan -->
+            <div onclick="filterByBuildingFromMap('bld-perpus')" class="p-3.5 rounded-lg border border-cyan-500/40 bg-cyan-950/20 hover:border-cyan-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-cyan-300">
+                <span>Perpustakaan Pusat</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-400"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Ruang Baca & Riset Mahasiswa</p>
+              <div class="mt-2 text-[10px] text-cyan-400 font-mono">2 Unit Linksys EA7500 • 100% UP</div>
+            </div>
+
+            <!-- Asrama & Pesantren -->
+            <div onclick="filterByBuildingFromMap('bld-asrama')" class="p-3.5 rounded-lg border border-red-500/40 bg-red-950/20 hover:border-red-400 cursor-pointer transition">
+              <div class="flex items-center justify-between text-xs font-bold text-red-300">
+                <span>Pesantren & Asrama</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-red-400 animate-ping"></span>
+              </div>
+              <p class="text-[11px] text-slate-400 mt-1">Asrama Santri Mahasiswa Putra/Putri</p>
+              <div class="mt-2 text-[10px] text-red-400 font-mono">2 Unit Linksys EA7500 (1 DOWN)</div>
+            </div>
+
+          </div>
+          <p class="text-[11px] text-slate-500 text-center">
+            <i class="fa-solid fa-hand-pointer mr-1"></i> Klik salah satu gedung di atas untuk memfilter tabel perangkat di bawah secara otomatis.
+          </p>
+        </div>
+      </div>
+
+      <!-- Realtime Latency Trend Chart (5 cols) -->
+      <div class="lg:col-span-5 glass-panel p-5 rounded-2xl border border-slate-800 flex flex-col justify-between">
+        <div class="flex items-center justify-between mb-3">
+          <div>
+            <h3 class="font-bold text-base text-slate-100 flex items-center">
+              <i class="fa-solid fa-chart-line text-cyan-400 mr-2"></i> Tren Latensi Jaringan Kampus
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Pemantauan fluktuasi ping RTT real-time</p>
+          </div>
+        </div>
+
+        <div class="relative h-[480px] w-full flex items-center justify-center p-2">
+          <canvas id="latency-chart"></canvas>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- DEVICES TABLE SECTION -->
+    <div class="glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div>
+          <div class="flex items-center space-x-2.5">
+            <h3 class="font-bold text-base text-slate-100 flex items-center">
+              <i class="fa-solid fa-list-check text-emerald-400 mr-2"></i> Daftar Inventaris & Status Perangkat Jaringan UNUGHA
+            </h3>
+            <span id="table-device-count" class="px-2.5 py-0.5 text-xs font-mono font-bold bg-slate-800 text-emerald-400 rounded-full border border-slate-700">24 Perangkat</span>
+          </div>
+          <p class="text-xs text-slate-400 mt-0.5">Router Core, Switch Distribution, Access Point Linksys EA7500, dan Server Layanan Mahasiswa</p>
+        </div>
+
+        <!-- Filters & Search & Add Button -->
+        <div class="flex flex-wrap items-center gap-2">
+          <div class="relative">
+            <i class="fa-solid fa-magnifying-glass absolute left-3 top-2.5 text-slate-500 text-xs"></i>
+            <input type="text" id="search-device" placeholder="Cari nama, IP, MAC..." class="pl-8 pr-3 py-1.5 text-xs bg-slate-900 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 w-40 sm:w-52">
+          </div>
+
+          <select id="filter-building" class="py-1.5 px-3 text-xs bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            <option value="">Semua Gedung</option>
+          </select>
+
+          <select id="filter-status" class="py-1.5 px-3 text-xs bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            <option value="">Semua Status</option>
+            <option value="UP">Hanya UP</option>
+            <option value="WARNING">Hanya WARNING</option>
+            <option value="DOWN">Hanya DOWN</option>
+          </select>
+
+          <button type="button" onclick="resetTableFilters()" class="px-2.5 py-1.5 text-xs font-semibold text-slate-400 hover:text-slate-200 bg-slate-900 hover:bg-slate-800 border border-slate-700 rounded-lg transition flex items-center" title="Reset Filter">
+            <i class="fa-solid fa-arrow-rotate-left mr-1"></i> Reset
+          </button>
+
+          <button type="button" onclick="openModal('modal-add-device')" class="px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg transition flex items-center shadow-md shadow-emerald-600/20">
+            <i class="fa-solid fa-plus mr-1.5"></i> Tambah Perangkat
+          </button>
+        </div>
+      </div>
+
+      <!-- Table -->
+      <div class="overflow-x-auto rounded-xl border border-slate-800">
+        <table class="w-full text-left border-collapse">
+          <thead>
+            <tr class="bg-slate-900/90 text-[11px] uppercase tracking-wider text-slate-400 border-b border-slate-800">
+              <th class="py-3 px-4">Nama Perangkat</th>
+              <th class="py-3 px-4">Alamat IP & MAC</th>
+              <th class="py-3 px-4">Gedung / Lokasi</th>
+              <th class="py-3 px-4">Status</th>
+              <th class="py-3 px-4">Latensi</th>
+              <th class="py-3 px-4">Uptime SLA</th>
+              <th class="py-3 px-4 text-right">Aksi</th>
+            </tr>
+          </thead>
+          <tbody id="devices-tbody" class="divide-y divide-slate-800/60 text-sm">
+            <!-- Dynamic Rows -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+    <!-- BOTTOM ROW: INCIDENT LOGS & CONFIGURATION -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- Incident & Downtime Alerts (7 cols) -->
+      <div class="lg:col-span-7 glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+        <div class="flex items-center justify-between">
+          <div>
+            <h3 class="font-bold text-base text-slate-100 flex items-center">
+              <i class="fa-solid fa-clock-rotate-left text-amber-400 mr-2"></i> Log Insiden & Riwayat Gangguan Jaringan
+            </h3>
+            <p class="text-xs text-slate-400 mt-0.5">Catatan waktu putus, penyebab kendala, dan rekonsiliasi</p>
+          </div>
+          <span class="text-xs text-slate-400">Max 50 Riwayat</span>
+        </div>
+
+        <div id="incidents-container" class="space-y-3 max-h-[360px] overflow-y-auto pr-1">
+          <!-- Rendered by app.js -->
+        </div>
+      </div>
+
+      <!-- System Settings & Telegram Bot Integration (5 cols) -->
+      <div class="lg:col-span-5 glass-panel p-5 rounded-2xl border border-slate-800 space-y-4">
+        <div>
+          <h3 class="font-bold text-base text-slate-100 flex items-center">
+            <i class="fa-solid fa-gear text-purple-400 mr-2"></i> Pengaturan Monitoring & Alerting
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Interval ping otomatis & notifikasi darurat Telegram NOC</p>
+        </div>
+
+        <form id="form-settings" class="space-y-3.5 text-xs">
+          <div class="grid grid-cols-2 gap-3">
+            <div>
+              <label class="block text-slate-400 mb-1">Interval Ping (Detik)</label>
+              <input type="number" id="set-interval" min="5" max="300" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+            <div>
+              <label class="block text-slate-400 mb-1">Timeout Probe (Detik)</label>
+              <input type="number" id="set-timeout" min="1" max="10" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+
+          <div>
+            <label class="block text-slate-400 mb-1">Threshold Peringatan Latensi (ms)</label>
+            <input type="number" id="set-threshold" min="30" max="1000" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+          </div>
+
+          <div class="pt-2 border-t border-slate-800 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="font-semibold text-slate-200 flex items-center">
+                <i class="fa-brands fa-telegram text-sky-400 mr-1.5 text-sm"></i> Notifikasi Telegram NOC
+              </span>
+              <label class="relative inline-flex items-center cursor-pointer">
+                <input type="checkbox" id="set-tg-enabled" class="sr-only peer">
+                <div class="w-9 h-5 bg-slate-800 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-slate-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-emerald-600"></div>
+              </label>
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Telegram Bot Token (dari @BotFather)</label>
+              <input type="password" id="set-tg-token" placeholder="123456789:ABCdef..." class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+
+            <div>
+              <label class="block text-slate-400 mb-1">Telegram Chat ID / Group ID NOC</label>
+              <input type="text" id="set-tg-chat" placeholder="-100xxxxxx / User ID" class="w-full px-3 py-2 bg-slate-900 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            </div>
+          </div>
+
+          <div class="flex items-center space-x-2 pt-2">
+            <button type="submit" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 font-bold rounded-lg text-white transition">
+              Simpan Konfigurasi
+            </button>
+            <button type="button" id="btn-test-tg" class="py-2 px-3 bg-slate-800 hover:bg-slate-700 border border-slate-700 font-semibold rounded-lg text-sky-400 transition" title="Kirim Pesan Uji Coba">
+              <i class="fa-brands fa-telegram mr-1.5"></i> Tes Kirim Pesan
+            </button>
+          </div>
+        </form>
+      </div>
+
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-slate-800/80 bg-slate-950 py-4 mt-8 text-center text-xs text-slate-500">
+    <div class="max-w-7xl mx-auto px-4 flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>UNUGHA NetWatch &copy; 2026 - Pusat Komputer & Jaringan Universitas Nahdlatul Ulama Al Ghazali Cilacap</div>
+      <div class="flex items-center space-x-3 text-slate-400">
+        <span>Node.js v26</span>
+        <span>•</span>
+        <span>Express + Socket.io</span>
+        <span>•</span>
+        <span>RBAC & Bandwidth Telemetry</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- MODAL: GANTI PERAN PENGGUNA (RBAC QUICK-SWITCH) -->
+  <div id="modal-switch-user" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-users-gear text-emerald-400 mr-2"></i> Pilih Peran Pengguna (RBAC)
+        </h3>
+        <button onclick="closeModal('modal-switch-user')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <p class="text-xs text-slate-400">Simulasi pembagian hak akses pengguna aplikasi monitoring UNUGHA:</p>
+
+      <div class="space-y-2.5">
+        <!-- Admin NOC -->
+        <div onclick="switchUserRole('admin')" class="p-3.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:border-emerald-500 cursor-pointer transition flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-emerald-600/30 text-emerald-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-user-shield"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-sm text-slate-200">Ahmad Fauzi, S.Kom.</div>
+              <div class="text-[11px] text-emerald-400 font-mono">ADMIN_NOC (Akses Penuh)</div>
+            </div>
+          </div>
+          <span class="text-xs text-slate-400">Pilih <i class="fa-solid fa-arrow-right ml-1"></i></span>
+        </div>
+
+        <!-- Teknisi Jaringan -->
+        <div onclick="switchUserRole('teknisi')" class="p-3.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:border-blue-500 cursor-pointer transition flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-blue-600/30 text-blue-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-user-gear"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-sm text-slate-200">Budi Santoso</div>
+              <div class="text-[11px] text-blue-400 font-mono">TEKNISI (Operator & Diagnostik Ping)</div>
+            </div>
+          </div>
+          <span class="text-xs text-slate-400">Pilih <i class="fa-solid fa-arrow-right ml-1"></i></span>
+        </div>
+
+        <!-- Pimpinan Rektorat -->
+        <div onclick="switchUserRole('rektorat')" class="p-3.5 rounded-xl border border-slate-700 bg-slate-800/50 hover:bg-slate-800 hover:border-purple-500 cursor-pointer transition flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-9 h-9 rounded-lg bg-purple-600/30 text-purple-400 flex items-center justify-center font-bold">
+              <i class="fa-solid fa-user-tie"></i>
+            </div>
+            <div>
+              <div class="font-semibold text-sm text-slate-200">Prof. Dr. KH. Nasrullah</div>
+              <div class="text-[11px] text-purple-400 font-mono">PIMPINAN (Executive & View-Only)</div>
+            </div>
+          </div>
+          <span class="text-xs text-slate-400">Pilih <i class="fa-solid fa-arrow-right ml-1"></i></span>
+        </div>
+      </div>
+
+      <div class="pt-2 border-t border-slate-800">
+        <button onclick="closeModal('modal-switch-user'); openUserManagementModal();" class="w-full py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 rounded-xl text-emerald-400 font-semibold text-xs transition flex items-center justify-center">
+          <i class="fa-solid fa-users-gear mr-1.5"></i> Kelola & Edit Semua Pengguna
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LAPORAN RESMI SLA KAMPUS UNUGHA (PRINT READY) -->
+  <div id="modal-sla-report" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden overflow-y-auto">
+    <div class="bg-white text-slate-900 border border-slate-300 max-w-4xl w-full rounded-2xl p-6 sm:p-8 shadow-2xl relative space-y-6 my-auto">
+      
+      <!-- Modal Action Bar (No Print) -->
+      <div class="no-print flex items-center justify-between border-b border-slate-200 pb-4">
+        <div class="flex items-center space-x-2">
+          <span class="px-2.5 py-1 text-xs font-bold rounded bg-emerald-100 text-emerald-800">Dokumen Resmi Kampus</span>
+          <span class="text-xs text-slate-500">SLA Availability Report</span>
+        </div>
+        <div class="flex items-center space-x-2">
+          <button onclick="printSlaReport()" class="px-3 py-1.5 text-xs font-bold bg-emerald-600 hover:bg-emerald-700 text-white rounded-lg transition flex items-center">
+            <i class="fa-solid fa-print mr-1.5"></i> Cetak / Simpan PDF
+          </button>
+          <button onclick="downloadSlaCsv()" class="px-3 py-1.5 text-xs font-bold bg-slate-800 hover:bg-slate-900 text-white rounded-lg transition flex items-center">
+            <i class="fa-solid fa-file-csv mr-1.5"></i> Download CSV
+          </button>
+          <button onclick="closeModal('modal-sla-report')" class="px-3 py-1.5 text-xs font-semibold bg-slate-200 hover:bg-slate-300 text-slate-800 rounded-lg transition">
+            Tutup
+          </button>
+        </div>
+      </div>
+
+      <!-- Printable Report Body -->
+      <div id="sla-report-body">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: TAMBAH PERANGKAT -->
+  <div id="modal-add-device" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-lg w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-plus-circle text-emerald-400 mr-2"></i> Tambah Perangkat Pemantauan Baru
+        </h3>
+        <button onclick="closeModal('modal-add-device')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="form-add-device" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Perangkat / Hostname *</label>
+          <input type="text" id="add-name" required placeholder="Contoh: AP-FTI-Ruang-Dosen" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Tipe Perangkat</label>
+            <select id="add-type" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="access_point">Access Point (WiFi)</option>
+              <option value="switch">Switch Distribution / Access</option>
+              <option value="router">Router / Core Gateway</option>
+              <option value="server">Server Aplikasi (SIAKAD/Web)</option>
+              <option value="firewall">Firewall / Security Appliance</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Lokasi Gedung UNUGHA</label>
+            <select id="add-building" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <!-- populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Alamat IP / Host Target *</label>
+            <input type="text" id="add-ip" required placeholder="10.27.xx.xx atau domain" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Display IP / Label Subnet</label>
+            <input type="text" id="add-display-ip" placeholder="Contoh: 10.27.50.12" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">MAC Address (Opsional)</label>
+            <input type="text" id="add-mac" placeholder="C4:41:1E:xx:xx:xx" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Protokol Probe</label>
+            <select id="add-protocol" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="icmp">ICMP (Ping Standar)</option>
+              <option value="http">HTTP/HTTPS (Web Check)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Deskripsi Ruang / Catatan Tambahan</label>
+          <input type="text" id="add-location" placeholder="Contoh: Plafon Ruang Dosen FTI Lantai 2" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModal('modal-add-device')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold transition shadow-lg shadow-emerald-600/30">
+            Simpan Perangkat
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: KONSOL DIAGNOSTIK JARINGAN (TERMINAL) -->
+  <div id="modal-diagnostics" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-terminal text-sky-400 mr-2"></i> Konsol Diagnostik Jaringan UNUGHA
+        </h3>
+        <button onclick="closeModal('modal-diagnostics')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Controls -->
+      <div class="grid grid-cols-1 sm:grid-cols-12 gap-3 text-xs">
+        <div class="sm:col-span-6">
+          <label class="block text-slate-400 mb-1">Target Host / IP Address</label>
+          <input type="text" id="diag-target-host" value="1.1.1.1" placeholder="Contoh: 8.8.8.8 atau siakad.unugha.ac.id" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-sky-500 font-mono">
+        </div>
+        <div class="sm:col-span-2">
+          <label class="block text-slate-400 mb-1">Jumlah Paket</label>
+          <select id="diag-ping-count" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-sky-500 font-mono">
+            <option value="4">4 paket</option>
+            <option value="6">6 paket</option>
+            <option value="10">10 paket</option>
+          </select>
+        </div>
+        <div class="sm:col-span-4 flex items-end space-x-2">
+          <button id="btn-run-diag-ping" onclick="runTerminalPing()" class="flex-1 py-2 bg-emerald-600 hover:bg-emerald-500 text-white font-bold rounded-lg transition flex items-center justify-center">
+            <i class="fa-solid fa-play mr-1.5"></i> Ping
+          </button>
+          <button id="btn-run-diag-trace" onclick="runTerminalTraceroute()" class="flex-1 py-2 bg-slate-800 hover:bg-slate-700 border border-slate-700 text-sky-400 font-semibold rounded-lg transition flex items-center justify-center">
+            <i class="fa-solid fa-route mr-1.5"></i> Traceroute
+          </button>
+        </div>
+      </div>
+
+      <!-- Terminal Output Screen -->
+      <div class="rounded-xl bg-black border border-slate-800 p-4 font-mono text-xs text-emerald-400 min-h-[260px] max-h-[360px] overflow-y-auto whitespace-pre-wrap leading-relaxed shadow-inner">
+        <div id="diagnostic-terminal-output"><span class="text-emerald-400">unugha-noc@gateway:~$</span> _
+Selamat datang di Konsol Diagnostik UNUGHA NetWatch.
+Ketikkan alamat IP atau nama host target di atas, lalu klik tombol "Ping" atau "Traceroute".</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: LIHAT DETAIL PERANGKAT (VIEW) -->
+  <div id="modal-view-device" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-lg w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-circle-info text-cyan-400 mr-2"></i> Detail Informasi Perangkat
+        </h3>
+        <button onclick="closeModal('modal-view-device')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="view-device-content" class="space-y-3 text-xs">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+        <button type="button" onclick="closeModal('modal-view-device')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold transition">
+          Tutup
+        </button>
+        <button type="button" id="btn-view-device-edit" class="px-4 py-2 bg-amber-600/30 hover:bg-amber-600/50 border border-amber-500/40 rounded-lg text-amber-300 font-bold transition flex items-center">
+          <i class="fa-solid fa-pen mr-1.5"></i> Edit Data
+        </button>
+        <button type="button" id="btn-view-device-ping" class="px-4 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold transition flex items-center">
+          <i class="fa-solid fa-bolt mr-1.5"></i> Ping Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: EDIT PERANGKAT -->
+  <div id="modal-edit-device" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-lg w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-pen-to-square text-amber-400 mr-2"></i> Edit Data Perangkat Jaringan
+        </h3>
+        <button onclick="closeModal('modal-edit-device')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="form-edit-device" class="space-y-3.5 text-xs">
+        <input type="hidden" id="edit-dev-id">
+
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Perangkat *</label>
+          <input type="text" id="edit-dev-name" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Tipe Perangkat</label>
+            <select id="edit-dev-type" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="access_point">Access Point (WiFi)</option>
+              <option value="switch">Switch Distribution / Access</option>
+              <option value="router">Router / Core Gateway</option>
+              <option value="server">Server Aplikasi (SIAKAD/Web)</option>
+              <option value="firewall">Firewall / Security Appliance</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Lokasi Gedung UNUGHA</label>
+            <select id="edit-dev-building" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <!-- populated dynamically -->
+            </select>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">IP Target Probe *</label>
+            <input type="text" id="edit-dev-ip" required class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Display IP / Subnet</label>
+            <input type="text" id="edit-dev-display-ip" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">MAC Address</label>
+            <input type="text" id="edit-dev-mac" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Protokol Probe</label>
+            <select id="edit-dev-protocol" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="icmp">ICMP (Ping Standar)</option>
+              <option value="http">HTTP/HTTPS (Web Check)</option>
+            </select>
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Deskripsi Ruang / Catatan</label>
+          <input type="text" id="edit-dev-location" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModal('modal-edit-device')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-amber-600 hover:bg-amber-500 rounded-lg text-white font-bold transition shadow-lg shadow-amber-600/30">
+            Perbarui Perangkat
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: KELOLA / FORM GEDUNG (ADD & EDIT) -->
+  <div id="modal-building-crud" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="modal-building-title" class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-building text-emerald-400 mr-2"></i> Tambah Gedung Kampus
+        </h3>
+        <button onclick="closeModal('modal-building-crud')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="form-building-crud" class="space-y-3.5 text-xs">
+        <input type="hidden" id="crud-bld-id">
+
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Gedung / Fakultas *</label>
+          <input type="text" id="crud-bld-name" required placeholder="Contoh: Gedung Laboratorium Terpadu" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Kode Gedung *</label>
+            <input type="text" id="crud-bld-code" required placeholder="LAB-TERPADU" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 uppercase font-mono">
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Warna Tema</label>
+            <input type="color" id="crud-bld-color" value="#059669" class="w-full h-9 bg-slate-950 border border-slate-700 rounded-lg cursor-pointer">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Ikon Gedung (FontAwesome)</label>
+          <select id="crud-bld-icon" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+            <option value="fa-building">Building Standar</option>
+            <option value="fa-laptop-code">Laptop / Lab Komputer</option>
+            <option value="fa-landmark">Landmark / Rektorat</option>
+            <option value="fa-graduation-cap">Topi Sarjana / Fakultas</option>
+            <option value="fa-book-open">Buku / Perpustakaan</option>
+            <option value="fa-book-quran">Quran / Syariah</option>
+            <option value="fa-hotel">Hotel / Asrama</option>
+            <option value="fa-cloud">Cloud / Data Center</option>
+          </select>
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Deskripsi Wilayah / Lokasi</label>
+          <input type="text" id="crud-bld-location" placeholder="Kompleks Barat UNUGHA" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModal('modal-building-crud')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold transition shadow-lg shadow-emerald-600/30">
+            Simpan Gedung
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: DETAIL / EDIT INSIDEN -->
+  <div id="modal-incident-detail" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-triangle-exclamation text-amber-400 mr-2"></i> Detail & Catatan Insiden
+        </h3>
+        <button onclick="closeModal('modal-incident-detail')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div id="incident-detail-content" class="space-y-3 text-xs">
+        <!-- Rendered dynamically -->
+      </div>
+
+      <div class="flex items-center justify-between pt-3 border-t border-slate-800">
+        <button type="button" id="btn-delete-incident" class="px-3 py-1.5 bg-red-900/40 hover:bg-red-900/70 text-red-300 border border-red-500/30 rounded-lg text-xs font-semibold transition flex items-center">
+          <i class="fa-solid fa-trash mr-1.5"></i> Hapus Log
+        </button>
+        <button type="button" onclick="closeModal('modal-incident-detail')" class="px-4 py-1.5 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 text-xs font-semibold transition">
+          Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: KELOLA PENGGUNA SISTEM (USER CRUD & RBAC) -->
+  <div id="modal-user-management" class="fixed inset-0 bg-slate-950/80 backdrop-blur-sm z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-6 shadow-2xl relative space-y-4 max-h-[90vh] flex flex-col">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div>
+          <h3 class="font-bold text-base text-slate-100 flex items-center">
+            <i class="fa-solid fa-users-gear text-emerald-400 mr-2"></i> Manajemen Pengguna & Hak Akses (RBAC)
+          </h3>
+          <p class="text-xs text-slate-400 mt-0.5">Kelola akun administrator, teknisi lapangan, dan pimpinan kampus</p>
+        </div>
+        <button onclick="closeModal('modal-user-management')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <div class="flex items-center justify-between">
+        <span class="text-xs text-slate-400">Daftar Akun Terdaftar:</span>
+        <button onclick="openAddUserModal()" class="px-3 py-1.5 bg-emerald-600 hover:bg-emerald-500 text-white rounded-lg text-xs font-bold transition flex items-center shadow-md shadow-emerald-600/30">
+          <i class="fa-solid fa-user-plus mr-1.5"></i> Tambah Pengguna Baru
+        </button>
+      </div>
+
+      <div class="overflow-y-auto flex-1 space-y-2.5 pr-1" id="users-list-container">
+        <!-- Rendered dynamically by app.js -->
+      </div>
+
+      <div class="pt-3 border-t border-slate-800 flex justify-end">
+        <button onclick="closeModal('modal-user-management')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 text-xs font-semibold transition">
+          Selesai / Tutup
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- MODAL: FORM TAMBAH / EDIT PENGGUNA -->
+  <div id="modal-user-crud" class="fixed inset-0 bg-slate-950/85 backdrop-blur-sm z-55 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 shadow-2xl relative space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <h3 id="modal-user-form-title" class="font-bold text-base text-slate-100 flex items-center">
+          <i class="fa-solid fa-user-pen text-amber-400 mr-2"></i> Tambah Pengguna Baru
+        </h3>
+        <button onclick="closeModal('modal-user-crud')" class="text-slate-400 hover:text-white">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <form id="form-user-crud" class="space-y-3.5 text-xs">
+        <input type="hidden" id="user-crud-id">
+
+        <div>
+          <label class="block text-slate-400 mb-1">Username Login *</label>
+          <input type="text" id="user-crud-username" required placeholder="misal: ahmad_noc" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500 font-mono">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Nama Lengkap & Gelar *</label>
+          <input type="text" id="user-crud-name" required placeholder="misal: Ir. Hendra Wijaya, M.Kom." class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div>
+          <label class="block text-slate-400 mb-1">Email Kampus *</label>
+          <input type="email" id="user-crud-email" required placeholder="user@unugha.ac.id" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+        </div>
+
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block text-slate-400 mb-1">Hak Akses (Role)</label>
+            <select id="user-crud-role" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="ADMIN_NOC">ADMIN_NOC (Penuh)</option>
+              <option value="TEKNISI">TEKNISI (Operator/Ping)</option>
+              <option value="PIMPINAN">PIMPINAN (View-Only)</option>
+            </select>
+          </div>
+          <div>
+            <label class="block text-slate-400 mb-1">Ikon Avatar</label>
+            <select id="user-crud-avatar" class="w-full px-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 focus:outline-none focus:border-emerald-500">
+              <option value="fa-user-shield">User Shield (Admin)</option>
+              <option value="fa-user-gear">User Gear (Teknisi)</option>
+              <option value="fa-user-tie">User Tie (Pimpinan)</option>
+              <option value="fa-user-graduate">User Graduate</option>
+              <option value="fa-user-astronaut">User Astronaut</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="flex items-center justify-end space-x-2 pt-3 border-t border-slate-800">
+          <button type="button" onclick="closeModal('modal-user-crud')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 rounded-lg text-slate-300 font-semibold transition">
+            Batal
+          </button>
+          <button type="submit" class="px-5 py-2 bg-emerald-600 hover:bg-emerald-500 rounded-lg text-white font-bold transition shadow-lg shadow-emerald-600/30">
+            Simpan Pengguna
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: LOGIN ADMIN / AUTENTIKASI -->
+  <div id="modal-login-admin" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 sm:p-7 shadow-2xl relative space-y-5">
+      
+      <!-- Modal Header -->
+      <div class="flex items-start justify-between border-b border-slate-800 pb-4">
+        <div class="flex items-center space-x-3">
+          <div class="w-11 h-11 rounded-xl bg-gradient-to-tr from-emerald-600 to-emerald-400 flex items-center justify-center text-white text-lg shadow-lg shadow-emerald-600/30">
+            <i class="fa-solid fa-user-shield"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base text-slate-100">Login Admin & NOC UNUGHA</h3>
+            <p class="text-xs text-slate-400 mt-0.5">Autentikasi sistem pemantauan jaringan kampus</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModal('modal-login-admin')" class="text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Role Preset Selector -->
+      <div class="space-y-1.5">
+        <label class="text-[11px] font-semibold text-slate-400 block">Pilih Akun Preset Cepat:</label>
+        <div class="grid grid-cols-3 gap-2">
+          <button type="button" onclick="selectLoginPreset('admin', 'adminunugha')" class="px-2.5 py-1.5 rounded-lg bg-emerald-950/50 hover:bg-emerald-900/60 border border-emerald-500/40 text-emerald-300 text-xs font-semibold transition text-center truncate">
+            <i class="fa-solid fa-shield-halved mr-1"></i> Admin NOC
+          </button>
+          <button type="button" onclick="selectLoginPreset('teknisi', 'teknisiunugha')" class="px-2.5 py-1.5 rounded-lg bg-blue-950/50 hover:bg-blue-900/60 border border-blue-500/40 text-blue-300 text-xs font-semibold transition text-center truncate">
+            <i class="fa-solid fa-user-gear mr-1"></i> Teknisi
+          </button>
+          <button type="button" onclick="selectLoginPreset('rektorat', 'rektoratunugha')" class="px-2.5 py-1.5 rounded-lg bg-purple-950/50 hover:bg-purple-900/60 border border-purple-500/40 text-purple-300 text-xs font-semibold transition text-center truncate">
+            <i class="fa-solid fa-user-tie mr-1"></i> Pimpinan
+          </button>
+        </div>
+      </div>
+
+      <!-- Login Form -->
+      <form id="form-login-admin" class="space-y-3.5 text-xs">
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">Username Pengguna *</label>
+          <div class="relative">
+            <i class="fa-solid fa-user absolute left-3 top-2.5 text-slate-500"></i>
+            <input type="text" id="login-username" required placeholder="admin / teknisi / rektorat" class="w-full pl-9 pr-3 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-slate-300 font-medium mb-1">Kata Sandi (Password) *</label>
+          <div class="relative">
+            <i class="fa-solid fa-lock absolute left-3 top-2.5 text-slate-500"></i>
+            <input type="password" id="login-password" required placeholder="Ketik kata sandi..." class="w-full pl-9 pr-10 py-2 bg-slate-950 border border-slate-700 rounded-lg text-slate-200 placeholder-slate-500 focus:outline-none focus:border-emerald-500 font-mono">
+            <button type="button" onclick="togglePasswordVisibility('login-password', 'login-eye-icon')" class="absolute right-3 top-2.5 text-slate-400 hover:text-white transition">
+              <i id="login-eye-icon" class="fa-solid fa-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Tetap di Aplikasi Checkbox -->
+        <div class="flex items-center justify-between pt-1">
+          <label class="flex items-center space-x-2 cursor-pointer select-none">
+            <input type="checkbox" id="login-remember" checked class="w-4 h-4 rounded bg-slate-950 border-slate-700 text-emerald-600 focus:ring-emerald-500">
+            <span class="text-slate-300 text-xs font-medium">Tetap di aplikasi (Ingat sesi login)</span>
+          </label>
+        </div>
+
+        <!-- Submit & Cancel Buttons -->
+        <div class="pt-3 border-t border-slate-800 flex items-center space-x-2">
+          <button type="button" onclick="closeModal('modal-login-admin')" class="flex-1 py-2.5 bg-slate-800 hover:bg-slate-700 rounded-xl text-slate-300 font-semibold transition text-center">
+            Batal
+          </button>
+          <button type="submit" id="btn-login-submit" class="flex-1 py-2.5 bg-emerald-600 hover:bg-emerald-500 rounded-xl text-white font-bold transition shadow-lg shadow-emerald-600/30 flex items-center justify-center">
+            <i class="fa-solid fa-right-to-bracket mr-2"></i> Masuk Sekarang
+          </button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- MODAL: KONFIRMASI SESI (TETAP DI APLIKASI ATAU KELUAR) -->
+  <div id="modal-session-confirm" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-md w-full rounded-2xl p-6 sm:p-7 shadow-2xl relative space-y-5">
+      
+      <!-- Header -->
+      <div class="text-center space-y-2">
+        <div class="w-14 h-14 rounded-2xl bg-amber-500/10 border border-amber-500/30 text-amber-400 flex items-center justify-center text-2xl mx-auto shadow-inner">
+          <i class="fa-solid fa-user-shield"></i>
+        </div>
+        <h3 class="font-extrabold text-lg text-slate-100">Autentikasi Sesi Aplikasi</h3>
+        <p class="text-xs text-slate-400 max-w-xs mx-auto">
+          Anda saat ini terautentikasi sebagai <strong id="session-confirm-user" class="text-emerald-400">Ahmad Fauzi (ADMIN_NOC)</strong>.
+        </p>
+      </div>
+
+      <!-- Question Prompt -->
+      <div class="p-3.5 rounded-xl bg-slate-950/70 border border-slate-800 text-xs text-slate-300 text-center leading-relaxed">
+        Pilih opsi di bawah ini: apakah Anda ingin <strong>tetap di aplikasi</strong> untuk melanjutkan pemantauan jaringan UNUGHA, atau <strong>keluar dari aplikasi</strong> (Logout)?
+      </div>
+
+      <!-- Decision Choices -->
+      <div class="space-y-2.5">
+        <!-- Opsi 1: Tetap di Aplikasi -->
+        <button type="button" onclick="stayInApp()" class="w-full p-3.5 rounded-xl bg-emerald-600 hover:bg-emerald-500 border border-emerald-500/40 text-white font-bold text-xs transition flex items-center justify-between shadow-lg shadow-emerald-600/20 group">
+          <div class="flex items-center space-x-3 text-left">
+            <div class="w-8 h-8 rounded-lg bg-emerald-700/60 flex items-center justify-center text-sm">
+              <i class="fa-solid fa-circle-check"></i>
+            </div>
+            <div>
+              <div class="font-bold text-white">Tetap di Aplikasi</div>
+              <div class="text-[10px] text-emerald-200">Pertahankan sesi aktif & lanjutkan pekerjaan</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-arrow-right text-xs group-hover:translate-x-0.5 transition-transform"></i>
+        </button>
+
+        <!-- Opsi 2: Keluar dari Aplikasi -->
+        <button type="button" onclick="executeLogout()" class="w-full p-3.5 rounded-xl bg-red-950/40 hover:bg-red-900/50 border border-red-500/30 text-red-300 font-bold text-xs transition flex items-center justify-between group">
+          <div class="flex items-center space-x-3 text-left">
+            <div class="w-8 h-8 rounded-lg bg-red-900/50 flex items-center justify-center text-sm text-red-400">
+              <i class="fa-solid fa-right-from-bracket"></i>
+            </div>
+            <div>
+              <div class="font-bold text-red-300">Keluar dari Aplikasi (Logout)</div>
+              <div class="text-[10px] text-slate-400">Hapus sesi login & batasi akses admin</div>
+            </div>
+          </div>
+          <i class="fa-solid fa-chevron-right text-xs text-red-400 group-hover:translate-x-0.5 transition-transform"></i>
+        </button>
+      </div>
+
+      <!-- Cancel / Close -->
+      <div class="pt-2 border-t border-slate-800 text-center">
+        <button type="button" onclick="closeModal('modal-session-confirm')" class="text-xs text-slate-400 hover:text-slate-200 transition">
+          Tutup Jendela Ini
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- MODAL: DOWNLOAD & INSTALASI MULTI-PLATFORM (MOBILE APK, TABLET, MAC, WINDOWS) -->
+  <div id="modal-download-app" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 flex items-center justify-center p-3 sm:p-4 hidden">
+    <div class="glass-panel bg-slate-900 border border-slate-700 max-w-2xl w-full rounded-2xl p-5 sm:p-7 shadow-2xl relative space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Header Modal -->
+      <div class="flex items-center justify-between border-b border-slate-800 pb-3">
+        <div class="flex items-center space-x-3">
+          <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-lg shadow-emerald-500/20">
+            <i class="fa-solid fa-mobile-screen-button text-lg"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-base sm:text-lg text-slate-100">Download & Pasang UNUGHA NetWatch</h3>
+            <p class="text-xs text-slate-400">Tersedia untuk semua HP Android, Tablet, iPad, MacBook & PC</p>
+          </div>
+        </div>
+        <button type="button" onclick="closeModal('modal-download-app')" class="text-slate-400 hover:text-white transition">
+          <i class="fa-solid fa-xmark text-lg"></i>
+        </button>
+      </div>
+
+      <!-- Quick Platform Tabs -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-1.5 p-1 bg-slate-950/80 rounded-xl border border-slate-800 text-xs font-bold">
+        <button id="tab-btn-android" type="button" onclick="switchDownloadTab('android')" class="py-2 px-3 rounded-lg bg-emerald-600 text-white transition flex items-center justify-center space-x-1.5">
+          <i class="fa-brands fa-android text-sm"></i>
+          <span>Android</span>
+        </button>
+        <button id="tab-btn-tablet" type="button" onclick="switchDownloadTab('tablet')" class="py-2 px-3 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+          <i class="fa-solid fa-tablet-screen-button text-sm"></i>
+          <span>Tablet/iPad</span>
+        </button>
+        <button id="tab-btn-mac" type="button" onclick="switchDownloadTab('mac')" class="py-2 px-3 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+          <i class="fa-brands fa-apple text-sm"></i>
+          <span>MacBook</span>
+        </button>
+        <button id="tab-btn-windows" type="button" onclick="switchDownloadTab('windows')" class="py-2 px-3 rounded-lg text-slate-400 hover:text-white transition flex items-center justify-center space-x-1.5">
+          <i class="fa-brands fa-windows text-sm"></i>
+          <span>Windows</span>
+        </button>
+      </div>
+
+      <!-- TAB CONTENT 1: ANDROID -->
+      <div id="tab-content-android" class="space-y-4">
+        <div class="p-4 rounded-xl bg-gradient-to-br from-emerald-950/40 to-slate-950 border border-emerald-500/30 space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">Android Universal (HP & Tablet)</span>
+              <h4 class="font-bold text-sm text-white mt-1">Dua Cara Pasang di Smartphone Android:</h4>
+              <p class="text-xs text-slate-300 mt-0.5">Kompatibel dengan Android versi 5.0 (Lollipop) hingga Android 15 (Semua merk: Samsung, Xiaomi, Oppo, Vivo, Realme, Infinix, dll)</p>
+            </div>
+            <i class="fa-brands fa-android text-3xl text-emerald-400"></i>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-2">
+            <!-- Pilihan 1: Download APK Langsung -->
+            <a href="/api/download/apk" download="UNUGHA-NetWatch-v1.2.apk" class="p-3.5 rounded-xl bg-slate-900 hover:bg-slate-800 border border-emerald-500/40 text-left transition flex flex-col justify-between group shadow-lg">
+              <div>
+                <div class="flex items-center space-x-2 text-emerald-400 font-bold text-xs mb-1">
+                  <i class="fa-solid fa-download"></i>
+                  <span>Opsi 1: Download File APK</span>
+                </div>
+                <div class="text-xs font-extrabold text-white">UNUGHA-NetWatch.apk</div>
+                <p class="text-[10px] text-slate-400 mt-1">Paket instalasi APK mandiri. Unduh dan buka langsung di pengelola berkas HP.</p>
+              </div>
+              <div class="mt-3 inline-flex items-center space-x-1.5 text-xs text-emerald-300 font-bold group-hover:text-emerald-200">
+                <span>Unduh Sekarang (.apk)</span>
+                <i class="fa-solid fa-arrow-down text-[10px]"></i>
+              </div>
+            </a>
+
+            <!-- Pilihan 2: Pasang PWA 1-Klik -->
+            <button type="button" onclick="triggerPwaInstall()" class="p-3.5 rounded-xl bg-emerald-950/60 hover:bg-emerald-900/60 border border-emerald-500/40 text-left transition flex flex-col justify-between group shadow-lg">
+              <div>
+                <div class="flex items-center space-x-2 text-emerald-300 font-bold text-xs mb-1">
+                  <i class="fa-solid fa-bolt"></i>
+                  <span>Opsi 2: Pasang Instan (PWA)</span>
+                </div>
+                <div class="text-xs font-extrabold text-white">Pasang di Layar Utama HP</div>
+                <p class="text-[10px] text-slate-300 mt-1">Tanpa perlu instal file manual. Aplikasi langsung muncul di daftar menu HP dengan ikon UNUGHA.</p>
+              </div>
+              <div class="mt-3 inline-flex items-center space-x-1.5 text-xs text-emerald-300 font-bold group-hover:text-white">
+                <span>Pasang 1-Klik Sekarang</span>
+                <i class="fa-solid fa-plus-circle text-[10px]"></i>
+              </div>
+            </button>
+          </div>
+
+          <!-- Petunjuk Instalasi APK -->
+          <div class="p-3 bg-slate-950/80 rounded-xl border border-slate-800 text-[11px] text-slate-300 space-y-1">
+            <div class="font-bold text-emerald-400 flex items-center space-x-1">
+              <i class="fa-solid fa-circle-info"></i>
+              <span>Petunjuk Pemasangan APK di HP Android:</span>
+            </div>
+            <ol class="list-decimal list-inside space-y-0.5 text-slate-400 pl-1">
+              <li>Ketuk tombol <strong>Download File APK</strong> di atas.</li>
+              <li>Jika muncul peringatan <em>"File mungkin berbahaya"</em>, pilih <strong>Tetap Download</strong> (aman resmi dari server UNUGHA).</li>
+              <li>Buka file hasil unduh dan aktifkan <em>"Izinkan instalasi dari sumber ini"</em>.</li>
+              <li>Tekan <strong>Install</strong> dan buka aplikasi NetWatch.</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT 2: TABLET & IPAD -->
+      <div id="tab-content-tablet" class="space-y-4 hidden">
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-cyan-500/30 space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-cyan-500/20 text-cyan-300 border border-cyan-500/30">Tablet Android & iPadOS</span>
+              <h4 class="font-bold text-sm text-white mt-1">Optimalisasi Layar Lebar Tablet</h4>
+              <p class="text-xs text-slate-300 mt-0.5">Mendukung orientasi Landscape & Portrait secara responsif otomatis.</p>
+            </div>
+            <i class="fa-solid fa-tablet-screen-button text-3xl text-cyan-400"></i>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+              <div class="font-bold text-cyan-400 flex items-center space-x-1.5">
+                <i class="fa-brands fa-apple"></i>
+                <span>Untuk Apple iPad / iPadOS:</span>
+              </div>
+              <p class="text-slate-300 text-[11px]">1. Buka aplikasi di peramban <strong>Safari</strong>.</p>
+              <p class="text-slate-300 text-[11px]">2. Ketuk ikon <strong>Bagikan (Share)</strong> <i class="fa-solid fa-arrow-up-from-bracket"></i> di bagian atas.</p>
+              <p class="text-slate-300 text-[11px]">3. Gulir ke bawah dan pilih <strong>"Tambahkan ke Layar Utama" (Add to Home Screen)</strong>.</p>
+              <p class="text-slate-300 text-[11px]">4. Aplikasi siap digunakan seperti aplikasi iPad bawaan.</p>
+            </div>
+
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+              <div class="font-bold text-cyan-400 flex items-center space-x-1.5">
+                <i class="fa-brands fa-android"></i>
+                <span>Untuk Tablet Android:</span>
+              </div>
+              <p class="text-slate-300 text-[11px]">1. Buka di <strong>Google Chrome</strong> pada tablet Anda.</p>
+              <p class="text-slate-300 text-[11px]">2. Ketuk menu titik tiga (&vellip;) di pojok kanan atas.</p>
+              <p class="text-slate-300 text-[11px]">3. Pilih <strong>"Install Aplikasi"</strong> atau <strong>"Tambahkan ke Layar Utama"</strong>.</p>
+              <p class="text-slate-300 text-[11px]">4. Atau unduh file APK langsung melalui tab Android.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT 3: MACBOOK / MACOS -->
+      <div id="tab-content-mac" class="space-y-4 hidden">
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-slate-700 space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-slate-700 text-slate-200 border border-slate-600">macOS (MacBook, iMac, Mac Mini)</span>
+              <h4 class="font-bold text-sm text-white mt-1">Instalasi Aplikasi Mandiri di macOS</h4>
+              <p class="text-xs text-slate-300 mt-0.5">Kompatibel dengan semua macOS (Sonoma, Ventura, Monterey, Big Sur) chip Apple Silicon (M1/M2/M3/M4) & Intel.</p>
+            </div>
+            <i class="fa-brands fa-apple text-3xl text-slate-200"></i>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3 text-xs">
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+              <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                <i class="fa-brands fa-safari"></i>
+                <span>Metode 1: Apple Safari (macOS Sonoma+)</span>
+              </div>
+              <p class="text-slate-300 text-[11px]">1. Buka web NetWatch di <strong>Safari</strong>.</p>
+              <p class="text-slate-300 text-[11px]">2. Klik menu <strong>File</strong> di menu bar atas Mac.</p>
+              <p class="text-slate-300 text-[11px]">3. Pilih <strong>"Tambahkan ke Dock..." (Add to Dock)</strong>.</p>
+              <p class="text-slate-300 text-[11px]">4. NetWatch kini menjadi aplikasi native mandiri di Dock Mac Anda.</p>
+            </div>
+
+            <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 space-y-1.5">
+              <div class="font-bold text-emerald-400 flex items-center space-x-1.5">
+                <i class="fa-brands fa-chrome"></i>
+                <span>Metode 2: Google Chrome / Edge macOS</span>
+              </div>
+              <p class="text-slate-300 text-[11px]">1. Buka di <strong>Google Chrome</strong> pada MacBook Anda.</p>
+              <p class="text-slate-300 text-[11px]">2. Klik ikon <strong>Install</strong> (simbol monitor kecil berpanah bawah) di ujung kanan address bar.</p>
+              <p class="text-slate-300 text-[11px]">3. Klik <strong>Install</strong> pada jendela konfirmasi.</p>
+              <p class="text-slate-300 text-[11px]">4. Aplikasi akan otomatis tersimpan di folder <em>Applications</em> Mac.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TAB CONTENT 4: WINDOWS & PC -->
+      <div id="tab-content-windows" class="space-y-4 hidden">
+        <div class="p-4 rounded-xl bg-slate-950/80 border border-blue-500/30 space-y-3">
+          <div class="flex items-start justify-between">
+            <div>
+              <span class="text-[10px] uppercase font-bold tracking-wider px-2 py-0.5 rounded bg-blue-500/20 text-blue-300 border border-blue-500/30">Windows 10 & 11 PC / Laptop</span>
+              <h4 class="font-bold text-sm text-white mt-1">Aplikasi Desktop Windows Mandiri</h4>
+              <p class="text-xs text-slate-300 mt-0.5">Bisa dijalankan tanpa membuka browser terlebih dahulu, dapat disematkan di Taskbar.</p>
+            </div>
+            <i class="fa-brands fa-windows text-3xl text-blue-400"></i>
+          </div>
+
+          <div class="p-3 bg-slate-900 rounded-xl border border-slate-800 text-xs space-y-1.5">
+            <p class="text-slate-300 text-[11px]">1. Buka di <strong>Microsoft Edge</strong> atau <strong>Google Chrome</strong>.</p>
+            <p class="text-slate-300 text-[11px]">2. Klik ikon <strong>Install App</strong> <i class="fa-solid fa-display"></i> pada bilah alamat URL atas.</p>
+            <p class="text-slate-300 text-[11px]">3. Centang <em>"Pin to taskbar"</em> dan <em>"Create Desktop shortcut"</em>.</p>
+            <p class="text-slate-300 text-[11px]">4. UNUGHA NetWatch siap dibuka langsung dari desktop Windows.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Scan QR Code Quick Mobile Launch -->
+      <div class="p-3.5 bg-slate-950 rounded-xl border border-slate-800 flex items-center justify-between space-x-3">
+        <div class="flex items-center space-x-3">
+          <!-- Live Scalable QR Code Graphic -->
+          <div class="w-14 h-14 bg-white p-1 rounded-lg flex items-center justify-center flex-shrink-0">
+            <svg class="w-full h-full text-slate-900" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M2 2h8v8H2V2zm2 2v4h4V4H4zm10-2h8v8h-8V2zm2 2v4h4V4h-4zM2 14h8v8H2v-8zm2 2v4h4v-4H4zm12-2h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zm-4 4h2v2h-2v-2zm4 0h2v2h-2v-2zM14 14h2v2h-2v-2zm2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm-2 2h2v2h-2v-2zm6-4h2v2h-2v-2zm-2 2h2v2h-2v-2z"/>
+            </svg>
+          </div>
+          <div>
+            <div class="text-xs font-bold text-white">Scan dari Kamera HP / Tablet</div>
+            <p class="text-[11px] text-slate-400">Arahkan kamera smartphone ke QR Code ini untuk langsung membuka dan memasang NetWatch di perangkat Anda.</p>
+          </div>
+        </div>
+        <button type="button" onclick="triggerPwaInstall()" class="px-3 py-2 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition flex-shrink-0">
+          <i class="fa-solid fa-download mr-1"></i> Pasang
+        </button>
+      </div>
+
+      <!-- Footer Buttons -->
+      <div class="flex items-center justify-between pt-2 border-t border-slate-800 text-xs">
+        <span class="text-[11px] text-slate-400">Versi 1.2 &bull; Puskom UNUGHA</span>
+        <button type="button" onclick="closeModal('modal-download-app')" class="px-4 py-2 bg-slate-800 hover:bg-slate-700 text-slate-200 rounded-xl font-bold transition">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- FLOATING INSTALL APP BANNER (MOBILE & TABLET & DESKTOP) -->
+  <div id="banner-install-app" class="fixed bottom-4 left-4 right-4 sm:left-auto sm:right-6 sm:w-96 z-50 p-3.5 rounded-2xl bg-slate-900/95 border border-emerald-500/40 shadow-2xl backdrop-blur-xl flex items-center justify-between space-x-3 transition-all duration-300">
+    <div class="w-10 h-10 rounded-xl bg-emerald-950/80 border border-emerald-500/40 flex items-center justify-center text-emerald-400 flex-shrink-0">
+      <i class="fa-solid fa-mobile-screen-button text-lg"></i>
+    </div>
+    <div class="flex-1 min-w-0">
+      <div class="text-xs font-bold text-white flex items-center space-x-1.5">
+        <span>Pasang NetWatch di HP</span>
+        <span class="text-[9px] bg-emerald-500/20 text-emerald-400 px-1.5 py-0.5 rounded font-mono font-bold">APK / PWA</span>
+      </div>
+      <p class="text-[11px] text-slate-400 truncate">Akses cepat & notifikasi di Android, iOS & Mac</p>
+    </div>
+    <div class="flex items-center space-x-1.5 flex-shrink-0">
+      <button onclick="openDownloadAppModal()" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white text-xs font-bold transition shadow">
+        Buka
+      </button>
+      <button onclick="dismissInstallBanner()" class="text-slate-400 hover:text-white p-1 text-sm">
+        <i class="fa-solid fa-xmark"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- TOAST CONTAINER FOR FLOATING ALERTS -->
+  <div id="toast-container" class="fixed bottom-5 right-5 z-50 flex flex-col space-y-2 max-w-sm w-full pointer-events-auto"></div>
+
+  <!-- APLIKASI UTAMA LOGIC SCRIPT -->
+  <script src="/js/app.js"></script>
+</body>
+</html>

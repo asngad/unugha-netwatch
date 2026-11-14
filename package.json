@@ -1,0 +1,42 @@
+{
+  "name": "unugha-netwatch",
+  "version": "1.0.0",
+  "description": "Sistem Monitoring Jaringan Kampus Universitas Nahdlatul Ulama Al Ghazali (UNUGHA)",
+  "main": "src/server.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
+    "test:modules": "node test-all-modules.js",
+    "lint": "eslint src/ tests/",
+    "lint:fix": "eslint src/ tests/ --fix",
+    "typecheck": "tsc --noEmit"
+  },
+  "keywords": [
+    "network-monitoring",
+    "unugha",
+    "ping",
+    "socket.io",
+    "express",
+    "noc-dashboard"
+  ],
+  "author": "UNUGHA IT Center",
+  "license": "MIT",
+  "dependencies": {
+    "bcryptjs": "^3.0.3",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "jsonwebtoken": "^9.0.3",
+    "ping": "^0.4.4",
+    "socket.io": "^4.8.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "eslint": "^10.14.0",
+    "jest": "^30.5.2",
+    "nodemon": "^3.1.9",
+    "typescript": "^7.0.2"
+  }
+}

@@ -1,0 +1,10 @@
+UNUGHA NetWatch Mobile Android Release Package v1.2
+Package Name: id.ac.unugha.netwatch
+Target: Android 5.0 - Android 15 (Universal: HP, Tablet, Foldable)
+Architecture: Universal (arm64-v8a, armeabi-v7a, x86_64)
+Campus: Universitas Nahdlatul Ulama Al Ghazali Cilacap
+Build Date: 2026-11-13T22:03:41.628Z
+
+Installable as:
+1. Native Android APK Installer
+2. Instant PWA Standalone Mobile App (Semua Smartphone Android, Tablet & iPad, MacBook, Windows)
