@@ -5,12 +5,12 @@ const path = require('path');
 async function createPresentation() {
   const pptx = new pptxgen();
 
-  pptx.layout = 'LAYOUT_16x9';
-  pptx.title = 'Presentasi Sidang: UNUGHA NetWatch (Lengkap dengan Diagram UML, Use Case, Sequence, & Arsitektur)';
+  pptx.layout = 'LAYOUT_16x9'; // 13.33 x 7.5 inches
+  pptx.title = 'Presentasi Sidang: UNUGHA NetWatch (Multi-Platform Responsive)';
   pptx.author = 'Asngad - Tim Pengembang IT UNUGHA';
   pptx.company = 'Universitas Nahdlatul Ulama Al Ghazali (UNUGHA) Cilacap';
 
-  // Palette
+  // Professional Palette (Dark NOC Executive Theme)
   const C_BG = '0B1120';        // Deep Navy NOC
   const C_CARD = '1E293B';      // Slate 800
   const C_BORDER = '334155';    // Slate 700
@@ -22,28 +22,29 @@ async function createPresentation() {
   const C_PURPLE = 'A855F7';    // Purple 500
   const C_ROSE = 'F43F5E';      // Rose 500
 
+  // Standard Header with balanced margins for laptop & desktop viewing
   function addHeader(slide, title, category, slideNum) {
     slide.background = { color: C_BG };
 
     // Category / Breadcrumb
     slide.addText(category.toUpperCase(), {
       x: 0.8,
-      y: 0.45,
+      y: 0.35,
       w: 8.0,
-      h: 0.3,
-      fontSize: 11,
+      h: 0.25,
+      fontSize: 10,
       bold: true,
       color: C_EMERALD,
       fontFace: 'Arial'
     });
 
-    // Main Slide Title
+    // Main Slide Title (Proportioned to not look too big on 14" laptops)
     slide.addText(title, {
       x: 0.8,
-      y: 0.75,
-      w: 11.5,
-      h: 0.6,
-      fontSize: 22,
+      y: 0.6,
+      w: 11.7,
+      h: 0.5,
+      fontSize: 19,
       bold: true,
       color: C_WHITE,
       fontFace: 'Arial'
@@ -52,7 +53,7 @@ async function createPresentation() {
     // Decorative line
     slide.addShape(pptx.shapes.RECTANGLE, {
       x: 0.8,
-      y: 1.4,
+      y: 1.15,
       w: 11.7,
       h: 0.02,
       fill: { color: C_BORDER }
@@ -61,20 +62,20 @@ async function createPresentation() {
     // Footer
     slide.addText('UNUGHA NetWatch • Sistem Monitoring & Inventarisasi Jaringan Kampus', {
       x: 0.8,
-      y: 7.15,
+      y: 7.05,
       w: 8.0,
       h: 0.25,
-      fontSize: 9,
+      fontSize: 8.5,
       color: C_MUTED,
       fontFace: 'Arial'
     });
 
     slide.addText(`Slide ${slideNum} / 15`, {
       x: 9.0,
-      y: 7.15,
+      y: 7.05,
       w: 3.5,
       h: 0.25,
-      fontSize: 9,
+      fontSize: 8.5,
       bold: true,
       align: 'right',
       color: C_EMERALD,
@@ -83,43 +84,52 @@ async function createPresentation() {
   }
 
   // ==========================================
-  // SLIDE 1: COVER
+  // SLIDE 1: COVER (Refined & Well-Proportioned)
   // ==========================================
   {
     const slide = pptx.addSlide();
     slide.background = { color: C_BG };
 
+    // Top Badge
+    slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
+      x: 1.0, y: 1.0, w: 4.8, h: 0.35,
+      fill: { color: '064E3B' },
+      line: { color: C_EMERALD, width: 1 },
+      rectRadius: 0.15
+    });
     slide.addText('DEMO SISTEM & UJIAN SIDANG TUGAS AKHIR / SKRIPSI', {
-      x: 1.0, y: 1.3, w: 8.0, h: 0.35,
-      fontSize: 11, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 1.1, y: 1.05, w: 4.6, h: 0.25,
+      fontSize: 9.5, bold: true, color: '34D399', fontFace: 'Arial', align: 'center'
     });
 
+    // Title (Scaled down from 44 to 32pt so it is not oversized on laptops)
     slide.addText('UNUGHA NetWatch', {
-      x: 1.0, y: 1.7, w: 11.0, h: 1.1,
-      fontSize: 44, bold: true, color: C_WHITE, fontFace: 'Arial'
+      x: 1.0, y: 1.45, w: 11.3, h: 0.8,
+      fontSize: 34, bold: true, color: C_WHITE, fontFace: 'Arial'
     });
 
+    // Subtitle
     slide.addText('Sistem Pemantauan Status Perangkat & Inventaris Jaringan Kampus Terintegrasi', {
-      x: 1.0, y: 2.8, w: 11.0, h: 0.6,
-      fontSize: 18, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 1.0, y: 2.3, w: 11.3, h: 0.45,
+      fontSize: 16, bold: true, color: C_SKY, fontFace: 'Arial'
     });
 
     slide.addText('Studi Kasus: Infrastruktur Jaringan NOC Gedung Rektorat & Kampus UNUGHA Cilacap', {
-      x: 1.0, y: 3.4, w: 11.0, h: 0.4,
-      fontSize: 14, color: C_MUTED, fontFace: 'Arial'
+      x: 1.0, y: 2.8, w: 11.3, h: 0.35,
+      fontSize: 13, color: C_MUTED, fontFace: 'Arial'
     });
 
     // Info Card
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 1.0, y: 4.2, w: 11.3, h: 2.5,
+      x: 1.0, y: 3.4, w: 11.3, h: 3.3,
       fill: { color: C_CARD },
       line: { color: C_BORDER, width: 1 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
 
     slide.addText([
       { text: 'Penyaji / Pengembang : ', options: { bold: true, color: C_EMERALD } },
-      { text: 'Asngad (Tim IT & Administrator Jaringan Kampus UNUGHA)\n', options: { color: C_WHITE } },
+      { text: 'Asngad (Tim IT & Administrator Jaringan UNUGHA)\n', options: { color: C_WHITE } },
       { text: 'Institusi                 : ', options: { bold: true, color: C_EMERALD } },
       { text: 'Universitas Nahdlatul Ulama Al Ghazali (UNUGHA) Cilacap - FMIKOM\n', options: { color: C_WHITE } },
       { text: 'Diagram Teknis Lengkap : ', options: { bold: true, color: C_EMERALD } },
@@ -127,10 +137,12 @@ async function createPresentation() {
       { text: 'Teknologi Utama        : ', options: { bold: true, color: C_EMERALD } },
       { text: 'Node.js Express, Socket.io WebSocket, ICMP/TCP Ping Engine, PWA, & Android APK\n', options: { color: C_WHITE } },
       { text: 'Repository GitHub     : ', options: { bold: true, color: C_EMERALD } },
-      { text: 'https://github.com/asngad/unugha-netwatch', options: { color: C_SKY } }
+      { text: 'https://github.com/asngad/unugha-netwatch\n', options: { color: C_SKY } },
+      { text: 'Demo Live Sistem     : ', options: { bold: true, color: C_EMERALD } },
+      { text: 'http://localhost:3000 (Mendukung Laptop, Desktop, Tablet, & Smartphone)', options: { color: C_WHITE } }
     ], {
-      x: 1.3, y: 4.4, w: 10.7, h: 2.1,
-      fontSize: 11.5, fontFace: 'Arial', lineSpacing: 21
+      x: 1.3, y: 3.6, w: 10.7, h: 2.9,
+      fontSize: 11, fontFace: 'Arial', lineSpacing: 20
     });
   }
 
@@ -144,44 +156,44 @@ async function createPresentation() {
     const problems = [
       {
         title: '🌐 4 ISP Multi-WAN Kompleks',
-        badge: 'Total 1050 Mbps',
+        badge: 'Total Bandwidth: 1050 Mbps',
         color: C_SKY,
-        text: 'UNUGHA melanggan 4 ISP simultan: Citra (100M FO), Indibiz (200M FO), Starlink (250M Satelit LEO), dan Starlite (500M Dedicated Utama).\n\nTanpa sistem monitoring terpusat, tim NOC kesulitan mendeteksi ISP mana yang mengalami packet loss atau putus jalur failover.'
+        text: 'UNUGHA mengoperasikan 4 ISP simultan: Citra (100M FO), Indibiz (200M FO), Starlink (250M Satelit LEO), dan Starlite (500M Dedicated Utama).\n\nTanpa sistem monitoring terpusat, tim NOC kesulitan mendeteksi ISP mana yang mengalami packet loss atau putus jalur failover.'
       },
       {
-        title: '⚠️ Deteksi Insiden Reaktif',
-        badge: 'Terlambat 30-60 Menit',
+        title: '⚠️ Respon Gangguan Reaktif',
+        badge: 'Terlambat 30 – 60 Menit',
         color: C_AMBER,
-        text: 'Insiden access point atau switch mati di ruang kuliah (GH1, GH2, Aula, FMIKOM, Perpustakaan) baru diketahui setelah ada komplain civitas akademika.\n\nMembutuhkan waktu lama untuk diagnosa dan mengganggu kelancaran SIAKAD serta CBT kampus.'
+        text: 'Insiden access point atau switch mati di ruang kuliah (GH1, GH2, Aula, FMIKOM, Perpustakaan) baru diketahui setelah ada keluhan civitas akademika.\n\nMembutuhkan waktu lama untuk diagnosa manual dan mengganggu kelancaran SIAKAD serta CBT ujian.'
       },
       {
         title: '📋 Inventarisasi Tercecer & Manual',
-        badge: 'Data Statis Spreadsheet',
+        badge: 'Spreadsheet Terpisah',
         color: C_EMERALD,
-        text: 'Pencatatan 28+ perangkat jaringan (Ruijie Core Gateway, Switch PoE, AP Wi-Fi 6) tersimpan di file terpisah tanpa hubungan dengan status fisik perangkat.\n\nTidak ada alat uji cepat (Quick Ping & Traceroute visual) terintegrasi pada data inventaris.'
+        text: 'Pencatatan 28+ perangkat jaringan (Ruijie Core Gateway, Switch PoE, AP Wi-Fi 6) tersimpan manual tanpa sinkronisasi status hidup/matinya node di lapangan.\n\nTidak tersedia fitur diagnostik terintegrasi (Quick Ping & Traceroute) pada data aset.'
       }
     ];
 
     problems.forEach((p, i) => {
       const x = 0.8 + i * 4.0;
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-        x, y: 1.7, w: 3.7, h: 5.1,
+        x, y: 1.45, w: 3.7, h: 5.2,
         fill: { color: C_CARD },
         line: { color: p.color, width: 1.5 },
-        rectRadius: 0.1
+        rectRadius: 0.08
       });
 
       slide.addText(p.title, {
-        x: x + 0.2, y: 1.9, w: 3.3, h: 0.4,
-        fontSize: 13.5, bold: true, color: p.color, fontFace: 'Arial'
+        x: x + 0.2, y: 1.65, w: 3.3, h: 0.35,
+        fontSize: 13, bold: true, color: p.color, fontFace: 'Arial'
       });
       slide.addText(p.badge, {
-        x: x + 0.2, y: 2.3, w: 3.3, h: 0.3,
-        fontSize: 10, bold: true, color: C_MUTED, fontFace: 'Arial'
+        x: x + 0.2, y: 2.05, w: 3.3, h: 0.25,
+        fontSize: 9.5, bold: true, color: C_MUTED, fontFace: 'Arial'
       });
       slide.addText(p.text, {
-        x: x + 0.2, y: 2.7, w: 3.3, h: 3.9,
-        fontSize: 11, color: C_WHITE, fontFace: 'Arial', lineSpacing: 18
+        x: x + 0.2, y: 2.45, w: 3.3, h: 4.0,
+        fontSize: 10.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 17
       });
     });
   }
@@ -191,41 +203,41 @@ async function createPresentation() {
   // ==========================================
   {
     const slide = pptx.addSlide();
-    addHeader(slide, 'Rumusan Masalah & Tujuan Pengembangan', 'Tinjauan Ilmiah', 3);
+    addHeader(slide, 'Rumusan Masalah & Sasaran Tujuan Pengembangan', 'Tinjauan Ilmiah', 3);
 
     // Rumusan Masalah
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 0.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🎯 Rumusan Masalah', {
-      x: 1.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 1.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_SKY, fontFace: 'Arial'
     });
     slide.addText([
       { text: '1. ', options: { bold: true, color: C_SKY } },
-      { text: 'Bagaimana membangun sistem pemantauan real-time berbasis ICMP/TCP ping otomatis dengan deteksi kegagalan < 15 detik?\n\n', options: { color: C_WHITE } },
+      { text: 'Bagaimana merancang sistem monitoring real-time berbasis ICMP/TCP ping otomatis dengan deteksi kegagalan di bawah 15 detik?\n\n', options: { color: C_WHITE } },
       { text: '2. ', options: { bold: true, color: C_SKY } },
       { text: 'Bagaimana mengintegrasikan manajemen inventaris perangkat dengan diagnostik langsung (Quick Ping & Traceroute)?\n\n', options: { color: C_WHITE } },
       { text: '3. ', options: { bold: true, color: C_SKY } },
       { text: 'Bagaimana menyajikan visualisasi telemetri 4 ISP dan menyediakan aksesibilitas multi-platform (Web, PWA, dan Android APK)?', options: { color: C_WHITE } }
     ], {
-      x: 1.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11.5, fontFace: 'Arial', lineSpacing: 20
+      x: 1.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 11, fontFace: 'Arial', lineSpacing: 19
     });
 
     // Tujuan
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 6.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 6.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_EMERALD, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🏆 Tujuan Sistem UNUGHA NetWatch', {
-      x: 7.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 7.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
     slide.addText([
       { text: '✓ Visibilitas NOC Terpusat: ', options: { bold: true, color: C_EMERALD } },
@@ -237,13 +249,13 @@ async function createPresentation() {
       { text: '✓ Portabilitas Multiplatform: ', options: { bold: true, color: C_EMERALD } },
       { text: 'Aplikasi siap dipasang di laptop, tablet, dan smartphone Android (APK mandiri).', options: { color: C_WHITE } }
     ], {
-      x: 7.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11.5, fontFace: 'Arial', lineSpacing: 20
+      x: 7.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 11, fontFace: 'Arial', lineSpacing: 19
     });
   }
 
   // ==========================================
-  // SLIDE 4: DIAGRAM USE CASE (BARU)
+  // SLIDE 4: DIAGRAM USE CASE (Optimized Layout)
   // ==========================================
   {
     const slide = pptx.addSlide();
@@ -251,90 +263,95 @@ async function createPresentation() {
 
     // Actor 1: Admin NOC
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 2.7, h: 2.4,
+      x: 0.8, y: 1.45, w: 2.7, h: 2.5,
       fill: { color: C_CARD },
-      line: { color: C_EMERALD, width: 2 },
-      rectRadius: 0.1
+      line: { color: C_EMERALD, width: 1.5 },
+      rectRadius: 0.08
     });
     slide.addText('👤 AKTOR 1:\nADMIN NOC UTAMA', {
-      x: 0.9, y: 1.85, w: 2.5, h: 0.5,
-      fontSize: 12, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
+      x: 0.9, y: 1.55, w: 2.5, h: 0.45,
+      fontSize: 11, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
     });
     slide.addText('• Login & Autentikasi Sesi\n• CRUD Inventaris Perangkat\n• Kelola Pengaturan & Ambang Batas\n• Ekspor Laporan SLA (CSV)\n• Manajemen Insiden & Log Audit', {
-      x: 0.9, y: 2.4, w: 2.5, h: 1.6,
-      fontSize: 9.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 14
+      x: 0.9, y: 2.05, w: 2.5, h: 1.7,
+      fontSize: 9, color: C_WHITE, fontFace: 'Arial', lineSpacing: 13
     });
 
     // Actor 2: Teknisi Lapangan
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 4.3, w: 2.7, h: 2.5,
+      x: 0.8, y: 4.15, w: 2.7, h: 2.5,
       fill: { color: C_CARD },
-      line: { color: C_SKY, width: 2 },
-      rectRadius: 0.1
+      line: { color: C_SKY, width: 1.5 },
+      rectRadius: 0.08
     });
     slide.addText('👷 AKTOR 2:\nTEKNISI LAPANGAN', {
-      x: 0.9, y: 4.45, w: 2.5, h: 0.5,
-      fontSize: 12, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
+      x: 0.9, y: 4.25, w: 2.5, h: 0.45,
+      fontSize: 11, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
     });
     slide.addText('• Pantau Peta Kampus & Topologi\n• Jalankan Quick Ping & Traceroute\n• Terima Alarm Notifikasi DOWN\n• Tangani & Acknowledge Insiden\n• Unduh Mobile App (PWA & APK)', {
-      x: 0.9, y: 5.0, w: 2.5, h: 1.6,
-      fontSize: 9.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 14
+      x: 0.9, y: 4.75, w: 2.5, h: 1.7,
+      fontSize: 9, color: C_WHITE, fontFace: 'Arial', lineSpacing: 13
     });
 
     // Center Use Cases Boundary Box
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 3.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 3.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: '0F172A' },
       line: { color: C_BORDER, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('BATAS SISTEM (SYSTEM BOUNDARY: UNUGHA NETWATCH)', {
-      x: 3.9, y: 1.8, w: 5.4, h: 0.3,
-      fontSize: 10, bold: true, color: C_MUTED, fontFace: 'Arial', align: 'center'
+      x: 3.9, y: 1.55, w: 5.4, h: 0.25,
+      fontSize: 9.5, bold: true, color: C_MUTED, fontFace: 'Arial', align: 'center'
     });
 
     const useCases = [
-      { name: 'UC-01: Autentikasi Admin (Login & Konfirmasi Keluar)', col: C_EMERALD, y: 2.2 },
-      { name: 'UC-02: Pemantauan Dashboard NOC & Peta Interaktif', col: C_SKY, y: 2.8 },
-      { name: 'UC-03: Manajemen Inventaris Aset (CRUD Perangkat)', col: C_EMERALD, y: 3.4 },
-      { name: 'UC-04: Diagnostik Cepat (Quick Ping & Traceroute Visual)', col: C_SKY, y: 4.0 },
-      { name: 'UC-05: Manajemen Tiket Insiden & Tindakan Acknowledge', col: C_AMBER, y: 4.6 },
-      { name: 'UC-06: Telemetri Bandwidth 4 ISP & Hardware NOC', col: C_SKY, y: 5.2 },
-      { name: 'UC-07: Ekspor Laporan SLA & Log Audit Aktivitas', col: C_EMERALD, y: 5.8 },
-      { name: 'UC-08: Instalasi Multi-Platform (PWA & Unduh APK)', col: C_PURPLE, y: 6.4 }
+      { name: 'UC-01: Autentikasi Admin (Login & Konfirmasi Keluar)', col: C_EMERALD, y: 1.95 },
+      { name: 'UC-02: Pemantauan Dashboard NOC & Peta Interaktif', col: C_SKY, y: 2.5 },
+      { name: 'UC-03: Manajemen Inventaris Aset (CRUD Perangkat)', col: C_EMERALD, y: 3.05 },
+      { name: 'UC-04: Diagnostik Cepat (Quick Ping & Traceroute Visual)', col: C_SKY, y: 3.6 },
+      { name: 'UC-05: Manajemen Tiket Insiden & Tindakan Acknowledge', col: C_AMBER, y: 4.15 },
+      { name: 'UC-06: Telemetri Bandwidth 4 ISP & Hardware NOC', col: C_SKY, y: 4.7 },
+      { name: 'UC-07: Ekspor Laporan SLA & Log Audit Aktivitas', col: C_EMERALD, y: 5.25 },
+      { name: 'UC-08: Instalasi Multi-Platform (PWA & Unduh APK)', col: C_PURPLE, y: 5.8 }
     ];
 
     useCases.forEach(uc => {
       slide.addShape(pptx.shapes.OVAL, {
-        x: 4.1, y: uc.y - 0.05, w: 5.0, h: 0.48,
+        x: 4.1, y: uc.y, w: 5.0, h: 0.45,
         fill: { color: C_CARD },
         line: { color: uc.col, width: 1 }
       });
       slide.addText(uc.name, {
-        x: 4.2, y: uc.y, w: 4.8, h: 0.38,
-        fontSize: 9.5, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
+        x: 4.2, y: uc.y + 0.04, w: 4.8, h: 0.35,
+        fontSize: 9, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
       });
+    });
+
+    slide.addText('<<include>> Autentikasi pada CRUD • <<extend>> Quick Ping dari Inventaris', {
+      x: 3.9, y: 6.35, w: 5.4, h: 0.25,
+      fontSize: 8, color: C_MUTED, fontFace: 'Arial', align: 'center'
     });
 
     // Actor 3: Mesin Otomatis
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 9.7, y: 2.4, w: 2.8, h: 3.7,
+      x: 9.7, y: 2.1, w: 2.8, h: 3.9,
       fill: { color: C_CARD },
-      line: { color: C_AMBER, width: 2 },
-      rectRadius: 0.1
+      line: { color: C_AMBER, width: 1.5 },
+      rectRadius: 0.08
     });
     slide.addText('⚙️ AKTOR SISTEM:\nMESIN MONITORING & SOCKET', {
-      x: 9.8, y: 2.6, w: 2.6, h: 0.5,
-      fontSize: 12, bold: true, color: C_AMBER, fontFace: 'Arial', align: 'center'
+      x: 9.8, y: 2.25, w: 2.6, h: 0.45,
+      fontSize: 11, bold: true, color: C_AMBER, fontFace: 'Arial', align: 'center'
     });
     slide.addText('• Siklus Ping ICMP/TCP Otomatis (15s)\n• Deteksi Kegagalan & Packet Loss\n• Auto-Create Tiket Insiden DOWN\n• Kalkulasi Agregasi 4 ISP\n• Siaran WebSocket Real-Time Event\n• Pencatatan Log Audit Sistem', {
-      x: 9.8, y: 3.3, w: 2.6, h: 2.6,
-      fontSize: 9.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 16
+      x: 9.8, y: 2.85, w: 2.6, h: 2.9,
+      fontSize: 9, color: C_WHITE, fontFace: 'Arial', lineSpacing: 15
     });
   }
 
   // ==========================================
-  // SLIDE 5: DIAGRAM ARSITEKTUR ANTIGRAVITY (BARU)
+  // SLIDE 5: DIAGRAM ARSITEKTUR ANTIGRAVITY (Neat Layers)
   // ==========================================
   {
     const slide = pptx.addSlide();
@@ -344,36 +361,36 @@ async function createPresentation() {
       {
         name: '1. PRESENTATION & MULTIPLATFORM CLIENT LAYER',
         color: C_EMERALD,
-        y: 1.7,
-        h: 1.0,
+        y: 1.45,
+        h: 0.95,
         desc: '• Web NOC Dashboard (Tailwind CSS, Glassmorphism, Chart.js, Interactive Campus Map)\n• Progressive Web App (PWA Service Worker, Offline Asset Cache, App Manifest)\n• Android Native Container (Capacitor Runtime, Standalone APK Installer)'
       },
       {
-        name: '2. REAL-TIME COMMUNICATION LAYER (WEBSOCKET EVENT BUS)',
+        name: '2. REAL-TIME COMMUNICATION LAYER (SOCKET.IO WEBSOCKET BUS)',
         color: C_SKY,
-        y: 2.85,
-        h: 0.9,
-        desc: '• Socket.io Provider: Siaran event bi-directional (device:update, bandwidth:telemetry, incident:alert)\n• Otomatis sinkronisasi tanpa reload halaman dengan delay sub-detik (< 100ms)'
+        y: 2.5,
+        h: 0.85,
+        desc: '• Socket.io Provider: Siaran event bi-directional (device:update, bandwidth:telemetry, incident:alert)\n• Otomatis sinkronisasi tanpa reload halaman dengan latensi sub-detik (< 100ms)'
       },
       {
         name: '3. APPLICATION CORE & CONTROLLER LAYER (EXPRESS.JS REST API)',
         color: C_PURPLE,
-        y: 3.9,
-        h: 1.1,
-        desc: '• AuthController (Autentikasi sesi & proteksi rute)\n• DeviceController (CRUD & validasi IP/MAC)\n• DiagnosticController (Quick Ping & Traceroute)\n• IncidentController & ReportController (SLA CSV)'
+        y: 3.45,
+        h: 1.05,
+        desc: '• AuthController (Autentikasi sesi & proteksi rute) • DeviceController (CRUD & validasi IP/MAC)\n• DiagnosticController (Quick Ping & Traceroute) • IncidentController & ReportController (SLA CSV)'
       },
       {
-        name: '4. BACKGROUND ENGINE SERVICES & PROBE WORKERS',
+        name: '4. BACKGROUND ENGINE SERVICES & HARDWARE PROBE WORKERS',
         color: C_AMBER,
-        y: 5.15,
+        y: 4.6,
         h: 0.95,
-        desc: '• MonitorEngine: Penjadwalan ICMP/TCP ping berkala (15 detik) ke 28 target perangkat\n• BandwidthService: Telemetri agregasi 4 ISP (Citra, Indibiz, Starlink, Starlite)\n• HardwareService & AlertService (Anti-spam alert throttling)'
+        desc: '• MonitorEngine: Penjadwalan ICMP/TCP ping berkala (15 detik) ke 28 target perangkat\n• BandwidthService: Telemetri agregasi 4 ISP (Citra, Indibiz, Starlink, Starlite) • AlertService'
       },
       {
         name: '5. ATOMIC PERSISTENCE & AUDIT LOG LAYER',
         color: C_ROSE,
-        y: 6.25,
-        h: 0.75,
+        y: 5.65,
+        h: 0.85,
         desc: '• LowDB JSON Atomic Engine (unugha_netwatch_db.json) • Audit Trail Record • Settings Store'
       }
     ];
@@ -387,18 +404,18 @@ async function createPresentation() {
       });
 
       slide.addText(ly.name, {
-        x: 1.0, y: ly.y + 0.08, w: 11.2, h: 0.28,
-        fontSize: 11, bold: true, color: ly.color, fontFace: 'Arial'
+        x: 1.0, y: ly.y + 0.06, w: 11.2, h: 0.25,
+        fontSize: 10.5, bold: true, color: ly.color, fontFace: 'Arial'
       });
       slide.addText(ly.desc, {
-        x: 1.0, y: ly.y + 0.34, w: 11.2, h: ly.h - 0.4,
-        fontSize: 9.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 14
+        x: 1.0, y: ly.y + 0.32, w: 11.2, h: ly.h - 0.38,
+        fontSize: 9, color: C_WHITE, fontFace: 'Arial', lineSpacing: 14
       });
     });
   }
 
   // ==========================================
-  // SLIDE 6: DIAGRAM SEKUENSI (SEQUENCE DIAGRAM) (BARU)
+  // SLIDE 6: DIAGRAM SEKUENSI (Well-Spaced Sequence)
   // ==========================================
   {
     const slide = pptx.addSlide();
@@ -416,33 +433,31 @@ async function createPresentation() {
 
     lifelines.forEach(lf => {
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-        x: lf.x, y: 1.7, w: 1.7, h: 0.55,
+        x: lf.x, y: 1.45, w: 1.7, h: 0.5,
         fill: { color: C_CARD },
         line: { color: lf.col, width: 1.5 },
         rectRadius: 0.08
       });
       slide.addText(lf.name, {
-        x: lf.x, y: 1.72, w: 1.7, h: 0.5,
-        fontSize: 9.5, bold: true, color: lf.col, fontFace: 'Arial', align: 'center'
+        x: lf.x, y: 1.47, w: 1.7, h: 0.45,
+        fontSize: 9, bold: true, color: lf.col, fontFace: 'Arial', align: 'center'
       });
-      // Vertical lifeline
       slide.addShape(pptx.shapes.LINE, {
-        x: lf.x + 0.85, y: 2.3, w: 0, h: 4.6,
+        x: lf.x + 0.85, y: 2.05, w: 0, h: 4.75,
         line: { color: '334155', width: 1, dashType: 'dash' }
       });
     });
 
-    // Sequence Steps / Arrows
     const steps = [
-      { no: '1', text: 'tick() siklus 15s', from: 0.8 + 0.85, to: 2.7 + 0.85, y: 2.6, col: C_SKY },
-      { no: '2', text: 'getMonitoredDevices()', from: 2.7 + 0.85, to: 8.4 + 0.85, y: 3.1, col: C_EMERALD },
-      { no: '3', text: 'probeBatch(28 devices)', from: 2.7 + 0.85, to: 4.6 + 0.85, y: 3.6, col: C_AMBER },
-      { no: '4', text: 'ICMP Echo / TCP Probe', from: 4.6 + 0.85, to: 6.5 + 0.85, y: 4.1, col: C_ROSE },
-      { no: '5', text: '[Timeout / Unreachable]', from: 6.5 + 0.85, to: 4.6 + 0.85, y: 4.6, col: C_ROSE, dashed: true },
-      { no: '6', text: 'result { status: DOWN, loss: 100% }', from: 4.6 + 0.85, to: 2.7 + 0.85, y: 5.1, col: C_AMBER, dashed: true },
-      { no: '7', text: 'updateStatus() & createIncident()', from: 2.7 + 0.85, to: 8.4 + 0.85, y: 5.6, col: C_EMERALD },
-      { no: '8', text: "broadcast('device:update', { status: 'DOWN' })", from: 2.7 + 0.85, to: 10.3 + 0.85, y: 6.1, col: C_PURPLE },
-      { no: '9', text: 'emit ke Client UI -> Munculkan Alert Merah & Alarm', from: 10.3 + 0.85, to: 11.8, y: 6.6, col: C_EMERALD }
+      { no: '1', text: 'tick() siklus 15s', from: 0.8 + 0.85, to: 2.7 + 0.85, y: 2.35, col: C_SKY },
+      { no: '2', text: 'getMonitoredDevices()', from: 2.7 + 0.85, to: 8.4 + 0.85, y: 2.85, col: C_EMERALD },
+      { no: '3', text: 'probeBatch(28 devices)', from: 2.7 + 0.85, to: 4.6 + 0.85, y: 3.35, col: C_AMBER },
+      { no: '4', text: 'ICMP Echo / TCP Probe', from: 4.6 + 0.85, to: 6.5 + 0.85, y: 3.85, col: C_ROSE },
+      { no: '5', text: '[Timeout / Host Unreachable]', from: 6.5 + 0.85, to: 4.6 + 0.85, y: 4.35, col: C_ROSE },
+      { no: '6', text: 'result { status: DOWN, loss: 100% }', from: 4.6 + 0.85, to: 2.7 + 0.85, y: 4.85, col: C_AMBER },
+      { no: '7', text: 'updateStatus() & createIncident()', from: 2.7 + 0.85, to: 8.4 + 0.85, y: 5.35, col: C_EMERALD },
+      { no: '8', text: "broadcast('device:update', { DOWN })", from: 2.7 + 0.85, to: 10.3 + 0.85, y: 5.85, col: C_PURPLE },
+      { no: '9', text: 'emit ke Client UI -> Alert Merah & Alarm', from: 10.3 + 0.85, to: 11.8, y: 6.35, col: C_EMERALD }
     ];
 
     steps.forEach(st => {
@@ -450,15 +465,15 @@ async function createPresentation() {
         x: Math.min(st.from, st.to),
         y: st.y,
         w: Math.abs(st.to - st.from),
-        h: 0.12,
+        h: 0.1,
         fill: { color: st.col }
       });
       slide.addText(`${st.no}. ${st.text}`, {
         x: Math.min(st.from, st.to),
-        y: st.y - 0.25,
+        y: st.y - 0.22,
         w: Math.abs(st.to - st.from),
-        h: 0.25,
-        fontSize: 8.5,
+        h: 0.22,
+        fontSize: 8,
         bold: true,
         color: C_WHITE,
         fontFace: 'Arial',
@@ -468,7 +483,7 @@ async function createPresentation() {
   }
 
   // ==========================================
-  // SLIDE 7: DIAGRAM UML / CLASS DIAGRAM (BARU)
+  // SLIDE 7: DIAGRAM KELAS UML (Comfortable Grid)
   // ==========================================
   {
     const slide = pptx.addSlide();
@@ -476,110 +491,110 @@ async function createPresentation() {
 
     // Class 1: Device
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 3.6, h: 3.1,
+      x: 0.8, y: 1.45, w: 3.6, h: 3.0,
       fill: { color: C_CARD },
       line: { color: C_EMERALD, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<Entity>> Device', {
-      x: 0.9, y: 1.8, w: 3.4, h: 0.35,
-      fontSize: 12, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
+      x: 0.9, y: 1.55, w: 3.4, h: 0.3,
+      fontSize: 11, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
     });
     slide.addText('- id: String\n- name: String\n- ip: String (IPv4)\n- mac: String (EUI-48)\n- type: DeviceType\n- buildingId: String\n- status: Enum (UP/DOWN)\n- latency: Number (ms)\n- packetLoss: Number (%)\n- uptimePercentage: Number', {
-      x: 0.9, y: 2.2, w: 3.4, h: 1.6,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+      x: 0.9, y: 1.9, w: 3.4, h: 1.6,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
     slide.addText('+ ping(): Promise<PingResult>\n+ updateStatus(status, latency): void\n+ calculateSla(): Number', {
-      x: 0.9, y: 3.9, w: 3.4, h: 0.8,
-      fontSize: 8.5, bold: true, color: C_SKY, fontFace: 'Arial', lineSpacing: 12
+      x: 0.9, y: 3.6, w: 3.4, h: 0.75,
+      fontSize: 8, bold: true, color: C_SKY, fontFace: 'Arial', lineSpacing: 11.5
     });
 
     // Class 2: Incident
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 4.8, y: 1.7, w: 3.6, h: 3.1,
+      x: 4.8, y: 1.45, w: 3.6, h: 3.0,
       fill: { color: C_CARD },
       line: { color: C_AMBER, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<Entity>> Incident', {
-      x: 4.9, y: 1.8, w: 3.4, h: 0.35,
-      fontSize: 12, bold: true, color: C_AMBER, fontFace: 'Arial', align: 'center'
+      x: 4.9, y: 1.55, w: 3.4, h: 0.3,
+      fontSize: 11, bold: true, color: C_AMBER, fontFace: 'Arial', align: 'center'
     });
     slide.addText('- id: String\n- deviceId: String\n- deviceName: String\n- severity: SeverityLevel\n- status: Enum (OPEN/ACK/RESOLVED)\n- startedAt: ISOString\n- resolvedAt: ISOString\n- acknowledgedBy: String\n- notes: String', {
-      x: 4.9, y: 2.2, w: 3.4, h: 1.6,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+      x: 4.9, y: 1.9, w: 3.4, h: 1.6,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
     slide.addText('+ acknowledge(user): void\n+ resolve(notes): void\n+ getDowntimeMinutes(): Number', {
-      x: 4.9, y: 3.9, w: 3.4, h: 0.8,
-      fontSize: 8.5, bold: true, color: C_SKY, fontFace: 'Arial', lineSpacing: 12
+      x: 4.9, y: 3.6, w: 3.4, h: 0.75,
+      fontSize: 8, bold: true, color: C_SKY, fontFace: 'Arial', lineSpacing: 11.5
     });
 
     // Class 3: Building
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 8.8, y: 1.7, w: 3.6, h: 2.2,
+      x: 8.8, y: 1.45, w: 3.6, h: 2.1,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<Entity>> Building', {
-      x: 8.9, y: 1.8, w: 3.4, h: 0.3,
-      fontSize: 12, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
+      x: 8.9, y: 1.55, w: 3.4, h: 0.25,
+      fontSize: 11, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
     });
     slide.addText('- id: String\n- name: String\n- code: String (GH1, GH2, NOC)\n- totalDevices: Number\n- activeDevices: Number', {
-      x: 8.9, y: 2.15, w: 3.4, h: 1.1,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+      x: 8.9, y: 1.85, w: 3.4, h: 1.0,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
     slide.addText('+ getHealthPercentage(): Number\n+ getDeviceList(): Device[]', {
-      x: 8.9, y: 3.3, w: 3.4, h: 0.5,
-      fontSize: 8.5, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 8.9, y: 2.95, w: 3.4, h: 0.5,
+      fontSize: 8, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
 
     // Class 4: User & Auth
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 5.0, w: 3.6, h: 1.9,
+      x: 0.8, y: 4.65, w: 3.6, h: 2.0,
       fill: { color: C_CARD },
       line: { color: C_PURPLE, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<Entity>> User', {
-      x: 0.9, y: 5.1, w: 3.4, h: 0.3,
-      fontSize: 12, bold: true, color: C_PURPLE, fontFace: 'Arial', align: 'center'
+      x: 0.9, y: 4.75, w: 3.4, h: 0.25,
+      fontSize: 11, bold: true, color: C_PURPLE, fontFace: 'Arial', align: 'center'
     });
     slide.addText('- id: String\n- username: String\n- role: Enum (ADMIN, TECHNICIAN)\n- passwordHash: String\n+ verifyCredentials(pass): Boolean', {
-      x: 0.9, y: 5.45, w: 3.4, h: 1.3,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+      x: 0.9, y: 5.05, w: 3.4, h: 1.4,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
 
     // Class 5: BandwidthSample & ISP
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 4.8, y: 5.0, w: 3.6, h: 1.9,
+      x: 4.8, y: 4.65, w: 3.6, h: 2.0,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<ValueObject>> BandwidthSample', {
-      x: 4.9, y: 5.1, w: 3.4, h: 0.3,
-      fontSize: 12, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
+      x: 4.9, y: 4.75, w: 3.4, h: 0.25,
+      fontSize: 11, bold: true, color: C_SKY, fontFace: 'Arial', align: 'center'
     });
     slide.addText('- timestamp: Date\n- downloadMbps: Number\n- uploadMbps: Number\n- capacityMbps: 1050 Mbps\n- isps: Array<ISPTelemetry>', {
-      x: 4.9, y: 5.45, w: 3.4, h: 1.3,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+      x: 4.9, y: 5.05, w: 3.4, h: 1.4,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
 
     // Class 6: AuditLog & Settings
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 8.8, y: 4.1, w: 3.6, h: 2.8,
+      x: 8.8, y: 3.75, w: 3.6, h: 2.9,
       fill: { color: C_CARD },
       line: { color: C_ROSE, width: 1.5 },
       rectRadius: 0.08
     });
     slide.addText('<<Entity>> AuditLog & Settings', {
-      x: 8.9, y: 4.2, w: 3.4, h: 0.3,
-      fontSize: 12, bold: true, color: C_ROSE, fontFace: 'Arial', align: 'center'
+      x: 8.9, y: 3.85, w: 3.4, h: 0.25,
+      fontSize: 11, bold: true, color: C_ROSE, fontFace: 'Arial', align: 'center'
     });
-    slide.addText('- id: String\n- timestamp: Date\n- action: String (LOGIN, CRUD, PING)\n- performedBy: String\n- details: Object\n\nSettings:\n- intervalSeconds: 15\n- timeoutSeconds: 3\n- latencyWarningThreshold: 120ms', {
-      x: 8.9, y: 4.55, w: 3.4, h: 2.2,
-      fontSize: 8.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 12
+    slide.addText('- id: String\n- timestamp: Date\n- action: String (LOGIN, CRUD, PING)\n- performedBy: String\n\nSettings Konfigurasi:\n- intervalSeconds: 15\n- timeoutSeconds: 3\n- latencyWarningThreshold: 120ms', {
+      x: 8.9, y: 4.15, w: 3.4, h: 2.3,
+      fontSize: 8, color: C_WHITE, fontFace: 'Arial', lineSpacing: 11.5
     });
   }
 
@@ -600,49 +615,49 @@ async function createPresentation() {
     isps.forEach((isp, idx) => {
       const xPos = 0.8 + idx * 2.95;
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-        x: xPos, y: 1.7, w: 2.8, h: 1.3,
+        x: xPos, y: 1.45, w: 2.8, h: 1.25,
         fill: { color: C_CARD },
         line: { color: C_EMERALD, width: 1 },
-        rectRadius: 0.1
+        rectRadius: 0.08
       });
       slide.addText(isp.name, {
-        x: xPos + 0.15, y: 1.85, w: 2.5, h: 0.3,
-        fontSize: 12, bold: true, color: C_WHITE, fontFace: 'Arial'
+        x: xPos + 0.15, y: 1.6, w: 2.5, h: 0.3,
+        fontSize: 11.5, bold: true, color: C_WHITE, fontFace: 'Arial'
       });
       slide.addText(`${isp.cap} • ${isp.role}`, {
-        x: xPos + 0.15, y: 2.2, w: 2.5, h: 0.6,
-        fontSize: 10, color: C_MUTED, fontFace: 'Arial'
+        x: xPos + 0.15, y: 1.95, w: 2.5, h: 0.6,
+        fontSize: 9.5, color: C_MUTED, fontFace: 'Arial'
       });
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 3.25, w: 11.6, h: 1.5,
+      x: 0.8, y: 2.9, w: 11.6, h: 1.5,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('CORE GATEWAY & DISTRIBUTION SWITCH LAYER (NOC RACK SERVER REKTORAT)', {
-      x: 1.1, y: 3.4, w: 11.0, h: 0.35,
-      fontSize: 12, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 1.1, y: 3.05, w: 11.0, h: 0.3,
+      fontSize: 11.5, bold: true, color: C_SKY, fontFace: 'Arial'
     });
     slide.addText('• Ruijie Reyee RG-EG1510XS Multi-WAN Gateway (192.168.1.1) - Load Balancing & Policy Routing 4 ISP\n• Ruijie RG-NBS3100-24GT4SFP 24-Port Managed Switch (192.168.1.2) - Distribusi Fiber & VLAN Kampus\n• UNUGHA NetWatch Monitoring Server - Node.js Backend Engine & Socket.io Provider (Port 3000)', {
-      x: 1.1, y: 3.8, w: 11.0, h: 0.85,
-      fontSize: 11, color: C_WHITE, fontFace: 'Arial', lineSpacing: 18
+      x: 1.1, y: 3.4, w: 11.0, h: 0.85,
+      fontSize: 10, color: C_WHITE, fontFace: 'Arial', lineSpacing: 16
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 5.0, w: 11.6, h: 1.8,
+      x: 0.8, y: 4.6, w: 11.6, h: 2.0,
       fill: { color: C_CARD },
       line: { color: C_BORDER, width: 1 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('DISTRIBUSI TITIK AKSES & BLOK GEDUNG KAMPUS UNUGHA', {
-      x: 1.1, y: 5.15, w: 11.0, h: 0.3,
-      fontSize: 12, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 1.1, y: 4.75, w: 11.0, h: 0.3,
+      fontSize: 11.5, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
     slide.addText('• Gedung Rektorat : NOC Server, Ruang Rektor, LPM, BAAK, Keuangan (Ruijie Reyee RG-RAP2260(E))\n• Gedung Hijau 1  : Lantai 1, Lantai 2 Sayap B, Lantai 3 Aula Utama\n• Gedung Hijau 2  : Lantai 1, Lantai 2, Lantai 3 Ruang Kuliah\n• FMIKOM & Perpus : Laboratorium Komputer, Ruang Dosen, Perpustakaan Lantai Atas & Bawah', {
-      x: 1.1, y: 5.5, w: 11.0, h: 1.1,
-      fontSize: 10.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 18
+      x: 1.1, y: 5.1, w: 11.0, h: 1.3,
+      fontSize: 10, color: C_WHITE, fontFace: 'Arial', lineSpacing: 17
     });
   }
 
@@ -680,23 +695,23 @@ async function createPresentation() {
       const col = i % 2;
       const row = Math.floor(i / 2);
       const x = 0.8 + col * 5.9;
-      const y = 1.7 + row * 2.55;
+      const y = 1.45 + row * 2.6;
 
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-        x, y, w: 5.7, h: 2.35,
+        x, y, w: 5.7, h: 2.4,
         fill: { color: C_CARD },
         line: { color: C_BORDER, width: 1 },
-        rectRadius: 0.1
+        rectRadius: 0.08
       });
 
       slide.addText(`${feat.icon}  ${feat.title}`, {
-        x: x + 0.3, y: y + 0.25, w: 5.1, h: 0.4,
-        fontSize: 14, bold: true, color: C_EMERALD, fontFace: 'Arial'
+        x: x + 0.3, y: y + 0.2, w: 5.1, h: 0.35,
+        fontSize: 13, bold: true, color: C_EMERALD, fontFace: 'Arial'
       });
 
       slide.addText(feat.desc, {
-        x: x + 0.3, y: y + 0.75, w: 5.1, h: 1.4,
-        fontSize: 11.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 18
+        x: x + 0.3, y: y + 0.65, w: 5.1, h: 1.5,
+        fontSize: 10.5, color: C_WHITE, fontFace: 'Arial', lineSpacing: 16
       });
     });
   }
@@ -710,14 +725,14 @@ async function createPresentation() {
 
     // Box 1: Unit Test Coverage
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 3.6, h: 5.1,
+      x: 0.8, y: 1.45, w: 3.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_EMERALD, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🧪 Unit Testing (Jest)', {
-      x: 1.0, y: 1.9, w: 3.2, h: 0.4,
-      fontSize: 14, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 1.0, y: 1.65, w: 3.2, h: 0.35,
+      fontSize: 13, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• 10 Test Suites Lolos 100%\n', options: { bold: true, color: C_WHITE } },
@@ -725,20 +740,20 @@ async function createPresentation() {
       { text: 'Cakupan Pengujian:\n', options: { bold: true, color: C_SKY } },
       { text: '1. Auth Controller & Session\n2. Device CRUD & Validation\n3. Incident Management SLA\n4. Bandwidth Aggregation Service\n5. Hardware Telemetry Service\n6. Ping Engine & Packet Loss\n7. Socket.io Event Broadcaster\n8. Audit Logger Engine', options: { color: C_MUTED } }
     ], {
-      x: 1.0, y: 2.4, w: 3.2, h: 4.2,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 17
+      x: 1.0, y: 2.1, w: 3.2, h: 4.3,
+      fontSize: 10, fontFace: 'Arial', lineSpacing: 16
     });
 
     // Box 2: Linter & Static Analysis
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 4.8, y: 1.7, w: 3.6, h: 5.1,
+      x: 4.8, y: 1.45, w: 3.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🔍 ESLint v10 Flat Config', {
-      x: 5.0, y: 1.9, w: 3.2, h: 0.4,
-      fontSize: 14, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 5.0, y: 1.65, w: 3.2, h: 0.35,
+      fontSize: 13, bold: true, color: C_SKY, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• 0 Errors, 0 Warnings\n', options: { bold: true, color: C_WHITE } },
@@ -746,20 +761,20 @@ async function createPresentation() {
       { text: 'Pemeriksaan Otomatis:\n', options: { bold: true, color: C_EMERALD } },
       { text: '- Pencegahan memory leak pada event listener WebSocket\n- Validasi penanganan error async/await\n- Standar penamaan camelCase konsisten\n- Pembersihan unused variables', options: { color: C_MUTED } }
     ], {
-      x: 5.0, y: 2.4, w: 3.2, h: 4.2,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 17
+      x: 5.0, y: 2.1, w: 3.2, h: 4.3,
+      fontSize: 10, fontFace: 'Arial', lineSpacing: 16
     });
 
     // Box 3: TypeScript Compiler
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 8.8, y: 1.7, w: 3.6, h: 5.1,
+      x: 8.8, y: 1.45, w: 3.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_AMBER, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🛡️ TypeScript Typecheck', {
-      x: 9.0, y: 1.9, w: 3.2, h: 0.4,
-      fontSize: 14, bold: true, color: C_AMBER, fontFace: 'Arial'
+      x: 9.0, y: 1.65, w: 3.2, h: 0.35,
+      fontSize: 13, bold: true, color: C_AMBER, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• 0 Type Errors (TSC)\n', options: { bold: true, color: C_WHITE } },
@@ -767,8 +782,8 @@ async function createPresentation() {
       { text: 'Keamanan Data:\n', options: { bold: true, color: C_SKY } },
       { text: '- Skema validasi objek perangkat (Device Model)\n- Integritas data format JSON\n- Pencegahan null pointer exception pada status latency & uptime', options: { color: C_MUTED } }
     ], {
-      x: 9.0, y: 2.4, w: 3.2, h: 4.2,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 17
+      x: 9.0, y: 2.1, w: 3.2, h: 4.3,
+      fontSize: 10, fontFace: 'Arial', lineSpacing: 16
     });
   }
 
@@ -818,10 +833,10 @@ async function createPresentation() {
     ];
 
     slide.addTable(tableData, {
-      x: 0.8, y: 1.7, w: 11.6, h: 2.2,
+      x: 0.8, y: 1.45, w: 11.6, h: 2.3,
       border: { color: C_BORDER, pt: 1 },
       fill: { color: C_CARD },
-      fontSize: 11,
+      fontSize: 10.5,
       fontFace: 'Arial',
       align: 'center'
     });
@@ -835,25 +850,25 @@ async function createPresentation() {
     highlights.forEach((hl, i) => {
       const x = 0.8 + i * 3.95;
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-        x, y: 4.3, w: 3.7, h: 2.5,
+        x, y: 4.15, w: 3.7, h: 2.5,
         fill: { color: C_CARD },
         line: { color: C_BORDER, width: 1 },
-        rectRadius: 0.1
+        rectRadius: 0.08
       });
 
       slide.addText(hl.num, {
-        x: x + 0.2, y: 4.55, w: 3.3, h: 0.7,
-        fontSize: 26, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
+        x: x + 0.2, y: 4.35, w: 3.3, h: 0.65,
+        fontSize: 24, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
       });
 
       slide.addText(hl.label, {
-        x: x + 0.2, y: 5.25, w: 3.3, h: 0.5,
-        fontSize: 12, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
+        x: x + 0.2, y: 5.05, w: 3.3, h: 0.45,
+        fontSize: 11.5, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
       });
 
       slide.addText(hl.sub, {
-        x: x + 0.2, y: 5.85, w: 3.3, h: 0.7,
-        fontSize: 10, color: C_MUTED, fontFace: 'Arial', align: 'center'
+        x: x + 0.2, y: 5.65, w: 3.3, h: 0.7,
+        fontSize: 9.5, color: C_MUTED, fontFace: 'Arial', align: 'center'
       });
     });
   }
@@ -866,14 +881,14 @@ async function createPresentation() {
     addHeader(slide, 'Aksesibilitas Multi-Platform & Distribusi Mobile APK', 'Portabilitas Sistem', 12);
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 0.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_PURPLE, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('📱 Progressive Web App (PWA)', {
-      x: 1.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_PURPLE, fontFace: 'Arial'
+      x: 1.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_PURPLE, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• Manifest PWA Lengkap: ', options: { bold: true, color: C_WHITE } },
@@ -883,19 +898,19 @@ async function createPresentation() {
       { text: '• Tampilan Responsif (Mobile-First): ', options: { bold: true, color: C_WHITE } },
       { text: 'Optimal pada berbagai resolusi layar tanpa kehilangan fungsionalitas NOC.', options: { color: C_MUTED } }
     ], {
-      x: 1.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11.5, fontFace: 'Arial', lineSpacing: 20
+      x: 1.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 10.5, fontFace: 'Arial', lineSpacing: 18
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 6.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 6.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_EMERALD, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🤖 Paket Aplikasi Android (APK Mandiri)', {
-      x: 7.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 7.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• Standalone Android APK: ', options: { bold: true, color: C_WHITE } },
@@ -905,8 +920,8 @@ async function createPresentation() {
       { text: '• Runtime Capacitor Android: ', options: { bold: true, color: C_WHITE } },
       { text: 'Terintegrasi dengan AndroidManifest.xml dan Gradle project build.', options: { color: C_MUTED } }
     ], {
-      x: 7.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11.5, fontFace: 'Arial', lineSpacing: 20
+      x: 7.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 10.5, fontFace: 'Arial', lineSpacing: 18
     });
   }
 
@@ -946,7 +961,7 @@ async function createPresentation() {
     ];
 
     steps.forEach((st, i) => {
-      const y = 1.7 + i * 1.02;
+      const y = 1.45 + i * 1.05;
       slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
         x: 0.8, y, w: 11.6, h: 0.9,
         fill: { color: C_CARD },
@@ -960,58 +975,58 @@ async function createPresentation() {
       });
       slide.addText(st.no, {
         x: 1.0, y: y + 0.17, w: 0.55, h: 0.55,
-        fontSize: 14, bold: true, color: C_BG, fontFace: 'Arial', align: 'center'
+        fontSize: 13, bold: true, color: C_BG, fontFace: 'Arial', align: 'center'
       });
 
       slide.addText(st.title, {
         x: 1.7, y: y + 0.13, w: 3.5, h: 0.35,
-        fontSize: 12, bold: true, color: C_WHITE, fontFace: 'Arial'
+        fontSize: 11.5, bold: true, color: C_WHITE, fontFace: 'Arial'
       });
       slide.addText(st.desc, {
         x: 5.2, y: y + 0.13, w: 7.0, h: 0.65,
-        fontSize: 10.5, color: C_MUTED, fontFace: 'Arial', lineSpacing: 15
+        fontSize: 10, color: C_MUTED, fontFace: 'Arial', lineSpacing: 15
       });
     });
   }
 
   // ==========================================
-  // SLIDE 14: KESIMPULAN & ROADMAP MASA DEPAN
+  // SLIDE 14: KESIMPULAN & PENGEMBANGAN
   // ==========================================
   {
     const slide = pptx.addSlide();
     addHeader(slide, 'Kesimpulan & Rencana Pengembangan Masa Depan', 'Penutup', 14);
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 0.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 0.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_EMERALD, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('📋 Kesimpulan Penelitian', {
-      x: 1.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_EMERALD, fontFace: 'Arial'
+      x: 1.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_EMERALD, fontFace: 'Arial'
     });
     slide.addText([
       { text: '1. Sistem Berhasil Diimplementasikan: ', options: { bold: true, color: C_WHITE } },
-      { text: 'UNUGHA NetWatch mampu memantau 28 node perangkat kampus dengan data valid & aktual secara real-time via WebSocket.\n\n', options: { color: C_MUTED } },
+      { text: 'UNUGHA NetWatch terbukti mampu memonitor status 28 node perangkat kampus dengan data valid & aktual secara real-time via WebSocket.\n\n', options: { color: C_MUTED } },
       { text: '2. Pemodelan Sistem Lengkap: ', options: { bold: true, color: C_WHITE } },
       { text: 'Terdokumentasi dalam Diagram Use Case, Arsitektur Antigravity, Diagram Sekuensi, dan Class Diagram UML terverifikasi.\n\n', options: { color: C_MUTED } },
       { text: '3. Kualitas Kode Teruji 100%: ', options: { bold: true, color: C_WHITE } },
       { text: '100% lulus Jest test coverage, 0 ESLint warning, 0 type errors, serta siap dijalankan di browser, tablet, dan smartphone Android (APK).', options: { color: C_MUTED } }
     ], {
-      x: 1.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 18
+      x: 1.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 10.5, fontFace: 'Arial', lineSpacing: 18
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 6.8, y: 1.7, w: 5.6, h: 5.1,
+      x: 6.8, y: 1.45, w: 5.6, h: 5.2,
       fill: { color: C_CARD },
       line: { color: C_SKY, width: 1.5 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
     slide.addText('🚀 Rencana Pengembangan Lanjutan', {
-      x: 7.1, y: 1.95, w: 5.0, h: 0.4,
-      fontSize: 16, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 7.1, y: 1.7, w: 5.0, h: 0.35,
+      fontSize: 15, bold: true, color: C_SKY, fontFace: 'Arial'
     });
     slide.addText([
       { text: '• Integrasi Protokol SNMP v3 & NetFlow:\n', options: { bold: true, color: C_WHITE } },
@@ -1021,8 +1036,8 @@ async function createPresentation() {
       { text: '• AI-Driven Anomaly Detection:\n', options: { bold: true, color: C_WHITE } },
       { text: 'Menerapkan machine learning untuk memprediksi degradasi performa kabel sebelum putus total.', options: { color: C_MUTED } }
     ], {
-      x: 7.1, y: 2.5, w: 5.0, h: 4.1,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 18
+      x: 7.1, y: 2.2, w: 5.0, h: 4.2,
+      fontSize: 10.5, fontFace: 'Arial', lineSpacing: 18
     });
   }
 
@@ -1034,25 +1049,25 @@ async function createPresentation() {
     slide.background = { color: C_BG };
 
     slide.addText('SESI TANYA JAWAB (Q&A)', {
-      x: 1.0, y: 1.7, w: 11.0, h: 0.4,
-      fontSize: 14, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
+      x: 1.0, y: 1.5, w: 11.3, h: 0.35,
+      fontSize: 13, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
     });
 
     slide.addText('Terima Kasih', {
-      x: 1.0, y: 2.2, w: 11.0, h: 1.2,
-      fontSize: 50, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
+      x: 1.0, y: 1.95, w: 11.3, h: 1.0,
+      fontSize: 42, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
     });
 
     slide.addText('Dewan Dosen Penguji, Dosen Pembimbing, & Seluruh Hadirin', {
-      x: 1.0, y: 3.4, w: 11.0, h: 0.5,
-      fontSize: 16, color: C_SKY, fontFace: 'Arial', align: 'center'
+      x: 1.0, y: 3.0, w: 11.3, h: 0.45,
+      fontSize: 15, color: C_SKY, fontFace: 'Arial', align: 'center'
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 3.0, y: 4.3, w: 7.3, h: 2.1,
+      x: 3.0, y: 3.8, w: 7.3, h: 2.6,
       fill: { color: C_CARD },
       line: { color: C_BORDER, width: 1 },
-      rectRadius: 0.1
+      rectRadius: 0.08
     });
 
     slide.addText([
@@ -1061,12 +1076,12 @@ async function createPresentation() {
       { text: '📂 Repository GitHub: https://github.com/asngad/unugha-netwatch\n', options: { color: C_SKY } },
       { text: '🏢 Universitas Nahdlatul Ulama Al Ghazali Cilacap', options: { color: C_MUTED } }
     ], {
-      x: 3.3, y: 4.5, w: 6.7, h: 1.7,
-      fontSize: 12, fontFace: 'Arial', align: 'center', lineSpacing: 20
+      x: 3.3, y: 4.1, w: 6.7, h: 2.0,
+      fontSize: 11, fontFace: 'Arial', align: 'center', lineSpacing: 21
     });
   }
 
-  // Output paths
+  // Save files
   const outDir = path.join(__dirname, 'public', 'downloads');
   if (!fs.existsSync(outDir)) {
     fs.mkdirSync(outDir, { recursive: true });
