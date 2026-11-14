@@ -7,6 +7,24 @@
   <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script>
+    mermaid.initialize({
+      startOnLoad: false,
+      theme: 'dark',
+      themeVariables: {
+        darkMode: true,
+        background: '#0F172A',
+        primaryColor: '#10B981',
+        primaryTextColor: '#F8FAFC',
+        primaryBorderColor: '#059669',
+        lineColor: '#38BDF8',
+        secondaryColor: '#1E293B',
+        tertiaryColor: '#1E293B',
+        fontFamily: 'Plus Jakarta Sans, sans-serif'
+      }
+    });
+  </script>
   <style>
     @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;600&display=swap');
     
@@ -81,7 +99,7 @@
           UNUGHA NetWatch
           <span class="text-[10px] font-semibold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-400 border border-emerald-500/30">SIDANG TUGAS AKHIR</span>
         </h1>
-        <p class="text-[11px] text-slate-400">Sistem Pemantauan & Inventarisasi Jaringan Kampus UNUGHA</p>
+        <p class="text-[11px] text-slate-400">Sistem Pemantauan &amp; Inventarisasi Jaringan Kampus UNUGHA</p>
       </div>
     </div>
 
@@ -91,10 +109,10 @@
         <i class="fa-solid fa-play text-[10px]"></i> Buka Live Demo NOC
       </a>
       <a href="/downloads/UNUGHA-NetWatch-Presentasi-Sidang.pptx" download class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium flex items-center gap-1.5 transition">
-        <i class="fa-solid fa-file-powerpoint text-amber-400"></i> Download PPTX
+        <i class="fa-solid fa-file-powerpoint text-amber-400"></i> Download PPTX (15 Slide)
       </a>
-      <a href="/api/download/apk" download class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium flex items-center gap-1.5 transition">
-        <i class="fa-brands fa-android text-emerald-400"></i> Download APK
+      <a href="/figma-import.html" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-medium flex items-center gap-1.5 transition">
+        <i class="fa-brands fa-figma text-sky-400"></i> Buka di Figma
       </a>
       <button onclick="toggleOverview()" title="Daftar Slide (Esc)" class="px-2.5 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-300 border border-slate-700">
         <i class="fa-solid fa-th-large"></i>
@@ -107,7 +125,7 @@
 
   <!-- PROGRESS BAR -->
   <div class="no-print h-1 bg-slate-800 w-full overflow-hidden">
-    <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-500 via-sky-400 to-emerald-400 transition-all duration-300" style="width: 10%;"></div>
+    <div id="progressBar" class="h-full bg-gradient-to-r from-emerald-500 via-sky-400 to-emerald-400 transition-all duration-300" style="width: 6.66%;"></div>
   </div>
 
   <!-- SLIDES CONTAINER -->
@@ -123,12 +141,12 @@
       
       <div class="space-y-3">
         <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight leading-tight">
-          Sistem Pemantauan Status Perangkat & <br>
+          Sistem Pemantauan Status Perangkat &amp; <br>
           <span class="text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 via-sky-400 to-emerald-200">
             Inventaris Jaringan Kampus Terintegrasi
           </span>
         </h1>
-        <p class="text-lg md:text-xl text-slate-300 max-w-4xl">
+        <p class="text-base md:text-lg text-slate-300 max-w-4xl">
           Implementasi Monitoring Real-Time Multi-WAN, Inventarisasi Aset Jaringan, Manajemen Insiden, dan Telemetri Bandwidth pada Universitas Nahdlatul Ulama Al Ghazali (UNUGHA) Cilacap.
         </p>
       </div>
@@ -137,17 +155,17 @@
         <div class="glass-panel p-4 rounded-xl border border-slate-700">
           <div class="text-xs text-slate-400 font-semibold mb-1">PENYAJI / PENGEMBANG</div>
           <div class="text-base font-bold text-emerald-400">Asngad</div>
-          <div class="text-xs text-slate-300">Tim IT & Jaringan Kampus UNUGHA</div>
+          <div class="text-xs text-slate-300">Tim IT &amp; Administrator Jaringan UNUGHA</div>
         </div>
         <div class="glass-panel p-4 rounded-xl border border-slate-700">
           <div class="text-xs text-slate-400 font-semibold mb-1">INSTITUSI PENDIDIKAN</div>
           <div class="text-base font-bold text-sky-400">UNUGHA Cilacap</div>
-          <div class="text-xs text-slate-300">Fakultas MIPA &amp; Ilmu Komputer</div>
+          <div class="text-xs text-slate-300">Fakultas MIPA &amp; Ilmu Komputer (FMIKOM)</div>
         </div>
         <div class="glass-panel p-4 rounded-xl border border-slate-700">
-          <div class="text-xs text-slate-400 font-semibold mb-1">ARSITEKTUR &amp; PLATFORM</div>
-          <div class="text-base font-bold text-white">Full-Stack Realtime</div>
-          <div class="text-xs text-slate-300">Node.js • Socket.io • PWA • Android APK</div>
+          <div class="text-xs text-slate-400 font-semibold mb-1">DIAGRAM TEKNIS LENGKAP</div>
+          <div class="text-base font-bold text-white">4 Pemodelan Sistem</div>
+          <div class="text-xs text-slate-300">Use Case • Antigravity • Sequence • UML Class</div>
         </div>
       </div>
     </div>
@@ -219,7 +237,6 @@
       </div>
 
       <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-        <!-- Kolom Kiri: Rumusan Masalah -->
         <div class="glass-panel p-6 rounded-2xl border border-slate-700">
           <div class="flex items-center gap-3 mb-4">
             <span class="w-8 h-8 rounded-lg bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold text-sm">
@@ -230,20 +247,19 @@
           <ul class="space-y-4 text-sm text-slate-300">
             <li class="flex items-start gap-3">
               <span class="font-bold text-sky-400">1.</span>
-              <span>Bagaimana merancang sistem monitoring real-time berbasis ICMP/TCP ping otomatis dengan toleransi latensi dan deteksi kegagalan di bawah 15 detik?</span>
+              <span>Bagaimana merancang sistem monitoring real-time berbasis ICMP/TCP ping otomatis dengan deteksi kegagalan di bawah 15 detik?</span>
             </li>
             <li class="flex items-start gap-3">
               <span class="font-bold text-sky-400">2.</span>
-              <span>Bagaimana mengintegrasikan manajemen inventaris perangkat dengan status operasional aktual dan fitur uji langsung (Quick Ping &amp; Traceroute)?</span>
+              <span>Bagaimana mengintegrasikan manajemen inventaris perangkat dengan diagnostik langsung (Quick Ping &amp; Traceroute)?</span>
             </li>
             <li class="flex items-start gap-3">
               <span class="font-bold text-sky-400">3.</span>
-              <span>Bagaimana menyajikan visualisasi data telemetri bandwidth 4 ISP serta memastikan kemudahan akses staf NOC melalui aplikasi web desktop, PWA, dan Android APK?</span>
+              <span>Bagaimana menyajikan visualisasi bandwidth 4 ISP serta memastikan kemudahan akses melalui Web NOC, PWA, dan Android APK?</span>
             </li>
           </ul>
         </div>
 
-        <!-- Kolom Kanan: Tujuan Sistem -->
         <div class="glass-panel p-6 rounded-2xl border border-slate-700">
           <div class="flex items-center gap-3 mb-4">
             <span class="w-8 h-8 rounded-lg bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold text-sm">
@@ -254,19 +270,19 @@
           <ul class="space-y-4 text-sm text-slate-300">
             <li class="flex items-start gap-3">
               <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Visibilitas NOC Terpusat:</strong> Memantau 28 perangkat jaringan secara kontinu dengan metrik latency, uptime SLA %, dan packet loss.</span>
+              <span><strong>Visibilitas NOC Terpusat:</strong> Memantau 28 node perangkat kampus dengan metrik latency, uptime SLA %, dan packet loss.</span>
             </li>
             <li class="flex items-start gap-3">
               <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Manajemen Insiden Akurat:</strong> Otomasi pencatatan tiket insiden saat perangkat DOWN dan audit trail tindakan admin.</span>
+              <span><strong>Manajemen Insiden Akurat:</strong> Otomasi tiket insiden saat perangkat DOWN dan audit trail tindakan admin.</span>
             </li>
             <li class="flex items-start gap-3">
               <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>CRUD Inventaris Dinamis:</strong> Pengelolaan data perangkat yang valid dengan validasi IP, MAC, Vendor, dan Lokasi Kampus.</span>
+              <span><strong>CRUD Inventaris Dinamis:</strong> Pengelolaan aset yang valid dengan validasi IP, MAC, Vendor, dan Lokasi Kampus.</span>
             </li>
             <li class="flex items-start gap-3">
               <i class="fa-solid fa-check text-emerald-400 mt-0.5"></i>
-              <span><strong>Aksesibilitas Multi-Platform:</strong> Menghadirkan aplikasi yang dapat dijalankan di semua perangkat teknisi (PC, Laptop, Tablet, Smartphone Android).</span>
+              <span><strong>Aksesibilitas Multi-Platform:</strong> Aplikasi dapat dijalankan di PC, Tablet, dan smartphone Android (APK mandiri).</span>
             </li>
           </ul>
         </div>
@@ -274,9 +290,298 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 4: ARSITEKTUR & TOPOLOGI KAMPUS
+         SLIDE 4: DIAGRAM USE CASE (BARU)
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="4">
+    <div class="slide w-full h-full flex-col justify-center space-y-4" data-slide="4">
+      <div class="border-b border-slate-800 pb-2">
+        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Pemodelan Sistem</div>
+        <h2 class="text-xl md:text-2xl font-bold text-white">Diagram Use Case Sistem UNUGHA NetWatch</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-12 gap-4 items-center">
+        <div class="md:col-span-3 space-y-3">
+          <div class="glass-panel p-3.5 rounded-xl border border-emerald-500/40">
+            <div class="flex items-center gap-2 text-emerald-400 font-bold text-xs mb-1">
+              <i class="fa-solid fa-user-shield"></i> AKTOR: ADMIN NOC
+            </div>
+            <ul class="text-[11px] text-slate-300 space-y-1">
+              <li>• Autentikasi Login/Logout</li>
+              <li>• CRUD Inventaris Perangkat</li>
+              <li>• Konfigurasi Ambang Batas</li>
+              <li>• Ekspor Laporan SLA (CSV)</li>
+              <li>• Pantau Log Audit Admin</li>
+            </ul>
+          </div>
+
+          <div class="glass-panel p-3.5 rounded-xl border border-sky-500/40">
+            <div class="flex items-center gap-2 text-sky-400 font-bold text-xs mb-1">
+              <i class="fa-solid fa-helmet-safety"></i> AKTOR: TEKNISI LAPANGAN
+            </div>
+            <ul class="text-[11px] text-slate-300 space-y-1">
+              <li>• Pantau Peta Topologi Kampus</li>
+              <li>• Uji Diagnostik Quick Ping</li>
+              <li>• Jalankan Visual Traceroute</li>
+              <li>• Tangani &amp; Acknowledge Tiket</li>
+              <li>• Download Mobile App (APK)</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="md:col-span-6 glass-panel p-4 rounded-2xl border border-slate-700 bg-slate-900/90 space-y-2">
+          <div class="text-[10px] text-center font-bold text-slate-400 uppercase tracking-widest border-b border-slate-800 pb-1">
+            Batas Sistem (System Boundary): UNUGHA NetWatch
+          </div>
+          <div class="grid grid-cols-2 gap-2 text-xs">
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-emerald-300">
+              UC-01: Autentikasi Sesi Admin
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-sky-300">
+              UC-02: Monitor Dashboard &amp; Peta
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-emerald-300">
+              UC-03: CRUD Inventaris Perangkat
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-sky-300">
+              UC-04: Quick Ping &amp; Traceroute
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-amber-300">
+              UC-05: Manajemen Tiket Insiden
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-sky-300">
+              UC-06: Telemetri Bandwidth 4 ISP
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-emerald-300">
+              UC-07: Ekspor SLA CSV &amp; Audit Log
+            </div>
+            <div class="p-2 rounded-lg bg-slate-800/80 border border-slate-700 text-center font-semibold text-purple-300">
+              UC-08: Download Android APK / PWA
+            </div>
+          </div>
+          <div class="text-[10px] text-slate-400 text-center pt-1">
+            <span class="text-emerald-400 font-mono">&lt;&lt;include&gt;&gt;</span> Autentikasi pada CRUD &amp; Setting • <span class="text-sky-400 font-mono">&lt;&lt;extend&gt;&gt;</span> Quick Ping dari inventaris
+          </div>
+        </div>
+
+        <div class="md:col-span-3">
+          <div class="glass-panel p-4 rounded-xl border border-amber-500/40">
+            <div class="flex items-center gap-2 text-amber-400 font-bold text-xs mb-2">
+              <i class="fa-solid fa-gears"></i> AKTOR SISTEM (OTOMATIS)
+            </div>
+            <ul class="text-[11px] text-slate-300 space-y-2">
+              <li>• <strong>Ping Scheduler:</strong> Eksekusi ICMP/TCP otomatis interval 15 detik.</li>
+              <li>• <strong>Incident Engine:</strong> Auto-create tiket saat node mati (DOWN).</li>
+              <li>• <strong>Multi-WAN Probe:</strong> Kalkulasi agregasi bandwidth 4 ISP.</li>
+              <li>• <strong>WebSocket Provider:</strong> Broadcast data real-time ke antarmuka klien.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 5: DIAGRAM ARSITEKTUR ANTIGRAVITY (BARU)
+         ============================================== -->
+    <div class="slide w-full h-full flex-col justify-center space-y-3" data-slide="5">
+      <div class="border-b border-slate-800 pb-2">
+        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Arsitektur Perangkat Lunak</div>
+        <h2 class="text-xl md:text-2xl font-bold text-white">Diagram Arsitektur Sistem Antigravity</h2>
+      </div>
+
+      <div class="space-y-2.5">
+        <div class="glass-panel p-3 rounded-xl border-l-4 border-l-emerald-500 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-emerald-400">1. PRESENTATION &amp; MULTIPLATFORM CLIENT LAYER</div>
+            <div class="text-[11px] text-slate-300">Web NOC Dashboard (Tailwind, Glassmorphism, Chart.js) • PWA Service Worker (Offline Cache) • Android Native APK (Capacitor Container)</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-emerald-500/20 text-emerald-300 font-mono">Frontend UX</span>
+        </div>
+
+        <div class="glass-panel p-3 rounded-xl border-l-4 border-l-sky-500 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-sky-400">2. REAL-TIME COMMUNICATION BUS (SOCKET.IO WEBSOCKET)</div>
+            <div class="text-[11px] text-slate-300">Rooms: <code class="text-sky-300">device:update</code>, <code class="text-sky-300">bandwidth:telemetry</code>, <code class="text-sky-300">incident:alert</code> • Latensi transmisi sub-detik (&lt; 100ms) tanpa reload</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-sky-500/20 text-sky-300 font-mono">Bi-Directional</span>
+        </div>
+
+        <div class="glass-panel p-3 rounded-xl border-l-4 border-l-purple-500 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-purple-400">3. APPLICATION CORE &amp; REST CONTROLLER LAYER (NODE.JS EXPRESS)</div>
+            <div class="text-[11px] text-slate-300">AuthController (Sesi) • DeviceController (CRUD &amp; Validasi) • DiagnosticController (Ping/Traceroute) • IncidentController &amp; ReportController (SLA CSV)</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-purple-500/20 text-purple-300 font-mono">REST API</span>
+        </div>
+
+        <div class="glass-panel p-3 rounded-xl border-l-4 border-l-amber-500 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-amber-400">4. BACKGROUND ENGINE SERVICES &amp; PROBE WORKERS</div>
+            <div class="text-[11px] text-slate-300">MonitorEngine (Siklus 15s) • BandwidthService (4 ISP Multi-WAN) • HardwareService (Core &amp; Switch Metrics) • AlertService (Telegram Throttling)</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-amber-500/20 text-amber-300 font-mono">Microservices</span>
+        </div>
+
+        <div class="glass-panel p-3 rounded-xl border-l-4 border-l-rose-500 flex items-center justify-between">
+          <div>
+            <div class="text-xs font-bold text-rose-400">5. DATA PERSISTENCE &amp; ATOMIC STORAGE LAYER</div>
+            <div class="text-[11px] text-slate-300">LowDB JSON Atomic Engine (<code class="text-rose-300">unugha_netwatch_db.json</code>) • Audit Trail Logger • System Configuration Store</div>
+          </div>
+          <span class="text-[10px] px-2 py-0.5 rounded bg-rose-500/20 text-rose-300 font-mono">LowDB Engine</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 6: DIAGRAM SEKUENSI (BARU)
+         ============================================== -->
+    <div class="slide w-full h-full flex-col justify-center space-y-4" data-slide="6">
+      <div class="border-b border-slate-800 pb-2">
+        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Pemodelan Perilaku (Behavioral Modeling)</div>
+        <h2 class="text-xl md:text-2xl font-bold text-white">Diagram Sekuensi: Siklus Ping, Deteksi Insiden, &amp; Broadcast</h2>
+      </div>
+
+      <div class="glass-panel p-4 rounded-2xl border border-slate-700 bg-slate-900/80">
+        <div class="grid grid-cols-6 gap-2 text-center text-xs font-bold pb-2 border-b border-slate-700">
+          <div class="p-1.5 rounded bg-slate-800 text-slate-300">Timer Scheduler</div>
+          <div class="p-1.5 rounded bg-sky-950 text-sky-400 border border-sky-800">MonitorEngine</div>
+          <div class="p-1.5 rounded bg-amber-950 text-amber-400 border border-amber-800">PingService</div>
+          <div class="p-1.5 rounded bg-rose-950 text-rose-400 border border-rose-800">Hardware AP / SW</div>
+          <div class="p-1.5 rounded bg-emerald-950 text-emerald-400 border border-emerald-800">Database (db.js)</div>
+          <div class="p-1.5 rounded bg-purple-950 text-purple-400 border border-purple-800">WebSocket &amp; Client</div>
+        </div>
+
+        <div class="space-y-1.5 pt-3 text-[11px] font-mono">
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-slate-300">
+            <span class="w-5 h-5 rounded-full bg-slate-700 text-white flex items-center justify-center text-[10px] font-bold">1</span>
+            <span>Timer memicu <strong>tick()</strong> setiap 15 detik ke <strong>MonitorEngine</strong></span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-emerald-300">
+            <span class="w-5 h-5 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold">2</span>
+            <span>MonitorEngine meminta <strong>getMonitoredDevices()</strong> ke Database (mengambil 28 perangkat aktif)</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-amber-300">
+            <span class="w-5 h-5 rounded-full bg-amber-700 text-white flex items-center justify-center text-[10px] font-bold">3</span>
+            <span>MonitorEngine mengirim <strong>probeHost(ip, timeout=3s)</strong> ke PingService secara parallel</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-rose-300">
+            <span class="w-5 h-5 rounded-full bg-rose-700 text-white flex items-center justify-center text-[10px] font-bold">4</span>
+            <span>PingService mengirim paket ICMP Echo ke Hardware ➔ Terjadi <strong>Timeout / Unreachable</strong> (Perangkat Mati)</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-amber-300">
+            <span class="w-5 h-5 rounded-full bg-amber-700 text-white flex items-center justify-center text-[10px] font-bold">5</span>
+            <span>PingService mengembalikan hasil: <code class="bg-slate-900 px-1 py-0.5 rounded">{ status: 'DOWN', packetLoss: 100% }</code></span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-emerald-300">
+            <span class="w-5 h-5 rounded-full bg-emerald-700 text-white flex items-center justify-center text-[10px] font-bold">6</span>
+            <span>MonitorEngine menyimpan status ke DB dan otomatis <strong>membuat Tiket Insiden DOWN baru</strong></span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-purple-300">
+            <span class="w-5 h-5 rounded-full bg-purple-700 text-white flex items-center justify-center text-[10px] font-bold">7</span>
+            <span>SocketService menyiarkan event <code class="bg-slate-900 px-1 py-0.5 rounded">device:update</code> ke seluruh browser teknisi NOC</span>
+          </div>
+          <div class="flex items-center gap-2 p-1.5 rounded bg-slate-800/40 text-red-400 font-bold">
+            <span class="w-5 h-5 rounded-full bg-red-700 text-white flex items-center justify-center text-[10px] font-bold">8</span>
+            <span>UI Klien menerima siaran ➔ Marker peta berubah merah, muncul banner insiden, &amp; alarm bunyi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 7: DIAGRAM KELAS UML (BARU)
+         ============================================== -->
+    <div class="slide w-full h-full flex-col justify-center space-y-4" data-slide="7">
+      <div class="border-b border-slate-800 pb-2">
+        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Struktur Berorientasi Objek</div>
+        <h2 class="text-xl md:text-2xl font-bold text-white">Diagram Kelas UML &amp; Relasi Entitas Data</h2>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs font-mono">
+        <!-- Class Device -->
+        <div class="glass-panel p-3.5 rounded-xl border border-emerald-500/40 space-y-2">
+          <div class="text-center font-bold text-emerald-400 border-b border-slate-700 pb-1 font-sans">
+            &lt;&lt;Entity&gt;&gt; Device
+          </div>
+          <div class="text-[10px] text-slate-300 space-y-0.5">
+            <div>- id: String (UUID)</div>
+            <div>- name: String</div>
+            <div>- ip: String (IPv4)</div>
+            <div>- mac: String (EUI-48)</div>
+            <div>- type: Enum (ROUTER, SWITCH, AP)</div>
+            <div>- buildingId: String</div>
+            <div>- status: Enum (UP, DOWN, WARN)</div>
+            <div>- latency: Number (ms)</div>
+            <div>- uptimePercentage: Number</div>
+          </div>
+          <div class="border-t border-slate-700 pt-1 text-[10px] text-sky-300">
+            <div>+ ping(): Promise&lt;PingResult&gt;</div>
+            <div>+ updateStatus(status, latency): void</div>
+            <div>+ calculateSla(): Number</div>
+          </div>
+        </div>
+
+        <!-- Class Incident -->
+        <div class="glass-panel p-3.5 rounded-xl border border-amber-500/40 space-y-2">
+          <div class="text-center font-bold text-amber-400 border-b border-slate-700 pb-1 font-sans">
+            &lt;&lt;Entity&gt;&gt; Incident
+          </div>
+          <div class="text-[10px] text-slate-300 space-y-0.5">
+            <div>- id: String (inc-uuid)</div>
+            <div>- deviceId: String</div>
+            <div>- deviceName: String</div>
+            <div>- severity: Enum (CRITICAL, WARN)</div>
+            <div>- status: Enum (OPEN, ACK, RESOLVED)</div>
+            <div>- startedAt: ISOString</div>
+            <div>- resolvedAt: ISOString</div>
+            <div>- acknowledgedBy: String</div>
+            <div>- notes: String</div>
+          </div>
+          <div class="border-t border-slate-700 pt-1 text-[10px] text-sky-300">
+            <div>+ acknowledge(user): void</div>
+            <div>+ resolve(notes): void</div>
+            <div>+ getDowntimeMinutes(): Number</div>
+          </div>
+        </div>
+
+        <!-- Class Building & Bandwidth -->
+        <div class="space-y-4">
+          <div class="glass-panel p-3 rounded-xl border border-sky-500/40 space-y-1.5">
+            <div class="text-center font-bold text-sky-400 border-b border-slate-700 pb-1 font-sans">
+              &lt;&lt;Entity&gt;&gt; Building
+            </div>
+            <div class="text-[10px] text-slate-300">
+              <div>- id: String | - name: String | - code: String</div>
+              <div>- totalDevices: Number | - activeDevices: Number</div>
+            </div>
+            <div class="border-t border-slate-700 pt-1 text-[10px] text-emerald-300">
+              <div>+ getHealthPercentage(): Number</div>
+            </div>
+          </div>
+
+          <div class="glass-panel p-3 rounded-xl border border-purple-500/40 space-y-1.5">
+            <div class="text-center font-bold text-purple-400 border-b border-slate-700 pb-1 font-sans">
+              &lt;&lt;Entity&gt;&gt; User &amp; AuditLog
+            </div>
+            <div class="text-[10px] text-slate-300">
+              <div>- username: String | - role: Enum</div>
+              <div>- action: String | - timestamp: Date</div>
+            </div>
+            <div class="border-t border-slate-700 pt-1 text-[10px] text-sky-300">
+              <div>+ verifyCredentials(): Boolean</div>
+              <div>+ logAudit(action, performedBy): void</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="text-center text-[11px] text-slate-400">
+        Relasi: <span class="text-emerald-400 font-bold">Building (1) ─── (N) Device</span> • <span class="text-amber-400 font-bold">Device (1) ─── (N) Incident</span> • <span class="text-purple-400 font-bold">User (1) ─── (N) AuditLog</span>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 8: TOPOLOGI KAMPUS
+         ============================================== -->
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="8">
       <div class="border-b border-slate-800 pb-3">
         <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Topologi Kampus</div>
         <h2 class="text-2xl md:text-3xl font-bold text-white">Arsitektur Infrastruktur Jaringan UNUGHA</h2>
@@ -350,9 +655,9 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 5: FITUR UTAMA & KEUNGGULAN
+         SLIDE 9: 4 PILAR FITUR
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="5">
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="9">
       <div class="border-b border-slate-800 pb-3">
         <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Fitur Unggulan</div>
         <h2 class="text-2xl md:text-3xl font-bold text-white">4 Pilar Fungsional UNUGHA NetWatch</h2>
@@ -410,16 +715,15 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 6: KUALITAS KODE & TEST SUITE
+         SLIDE 10: KUALITAS KODE & TEST SUITE
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="6">
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="10">
       <div class="border-b border-slate-800 pb-3">
         <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Pengujian Sistem</div>
         <h2 class="text-2xl md:text-3xl font-bold text-white">Standar Kualitas Perangkat Lunak &amp; Verifikasi</h2>
       </div>
 
       <div class="grid grid-cols-3 gap-6">
-        <!-- Card 1: Jest Unit Test -->
         <div class="glass-panel p-6 rounded-2xl border border-emerald-500/40">
           <div class="flex items-center justify-between mb-4">
             <span class="w-10 h-10 rounded-xl bg-emerald-500/20 text-emerald-400 flex items-center justify-center font-bold">
@@ -438,7 +742,6 @@
           </ul>
         </div>
 
-        <!-- Card 2: ESLint -->
         <div class="glass-panel p-6 rounded-2xl border border-sky-500/40">
           <div class="flex items-center justify-between mb-4">
             <span class="w-10 h-10 rounded-xl bg-sky-500/20 text-sky-400 flex items-center justify-center font-bold">
@@ -457,7 +760,6 @@
           </ul>
         </div>
 
-        <!-- Card 3: TypeScript Typecheck -->
         <div class="glass-panel p-6 rounded-2xl border border-amber-500/40">
           <div class="flex items-center justify-between mb-4">
             <span class="w-10 h-10 rounded-xl bg-amber-500/20 text-amber-400 flex items-center justify-center font-bold">
@@ -479,15 +781,14 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 7: HASIL PENGUJIAN & EVALUASI
+         SLIDE 11: TELEMETRI & HASIL EVALUASI
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="7">
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="11">
       <div class="border-b border-slate-800 pb-3">
         <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Hasil &amp; Evaluasi</div>
         <h2 class="text-2xl md:text-3xl font-bold text-white">Telemetri Performa Aktual 4 ISP UNUGHA</h2>
       </div>
 
-      <!-- Telemetry Table -->
       <div class="glass-panel rounded-2xl overflow-hidden border border-slate-700">
         <table class="w-full text-xs text-left">
           <thead class="bg-slate-800/80 text-slate-300 font-semibold border-b border-slate-700">
@@ -532,7 +833,6 @@
         </table>
       </div>
 
-      <!-- Key Metrics Comparison -->
       <div class="grid grid-cols-3 gap-4 text-center">
         <div class="glass-panel p-4 rounded-xl border border-slate-700">
           <div class="text-2xl font-black text-emerald-400">&lt; 15 Detik</div>
@@ -553,86 +853,120 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 8: PANDUAN LIVE DEMO DI DEPAN PENGUJI
+         SLIDE 12: AKSESIBILITAS MOBILE & APK
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="8">
-      <div class="border-b border-slate-800 pb-3 flex items-center justify-between">
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="12">
+      <div class="border-b border-slate-800 pb-3">
+        <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Portabilitas Sistem</div>
+        <h2 class="text-2xl md:text-3xl font-bold text-white">Aksesibilitas Multi-Platform &amp; Distribusi APK</h2>
+      </div>
+
+      <div class="grid grid-cols-2 gap-8">
+        <div class="glass-panel p-6 rounded-2xl border border-purple-500/40">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-solid fa-globe text-purple-400 text-xl"></i>
+            <h3 class="text-lg font-bold text-white">Progressive Web App (PWA)</h3>
+          </div>
+          <ul class="text-sm text-slate-300 space-y-3 leading-relaxed">
+            <li>• <strong>Installable di Berbagai OS:</strong> Mendukung shortcut aplikasi mandiri di Windows, macOS, iPadOS, dan tablet Android.</li>
+            <li>• <strong>Service Worker:</strong> Caching aset visual dan peta layout kampus untuk akses cepat tanpa latency jaringan.</li>
+            <li>• <strong>Desain Responsif:</strong> Antarmuka menyesuaikan layar smartphone teknisi tanpa terpotong.</li>
+          </ul>
+        </div>
+
+        <div class="glass-panel p-6 rounded-2xl border border-emerald-500/40">
+          <div class="flex items-center gap-3 mb-4">
+            <i class="fa-brands fa-android text-emerald-400 text-xl"></i>
+            <h3 class="text-lg font-bold text-white">Paket Native Android (APK Mandiri)</h3>
+          </div>
+          <ul class="text-sm text-slate-300 space-y-3 leading-relaxed">
+            <li>• <strong>Unduhan Seketika:</strong> File APK tersedia langsung melalui tombol navbar dan endpoint <code class="text-emerald-400 font-mono">/api/download/apk</code>.</li>
+            <li>• <strong>Modal QR Code:</strong> Dosen penguji dapat langsung memindai QR Code di layar presentasi menggunakan kamera HP untuk mencoba aplikasi.</li>
+            <li>• <strong>Capacitor Runtime:</strong> Terintegrasi dengan manifest Android native untuk performa stabil di smartphone.</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==============================================
+         SLIDE 13: SKENARIO DEMO PENGUJI
+         ============================================== -->
+    <div class="slide w-full h-full flex-col justify-center space-y-4" data-slide="13">
+      <div class="border-b border-slate-800 pb-2 flex items-center justify-between">
         <div>
           <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Skenario Presentasi</div>
-          <h2 class="text-2xl md:text-3xl font-bold text-white">Alur Demonstrasi di Depan Dewan Penguji</h2>
+          <h2 class="text-xl md:text-2xl font-bold text-white">Alur Demonstrasi di Depan Dewan Penguji</h2>
         </div>
         <a href="/" target="_blank" class="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-white font-semibold text-xs flex items-center gap-1.5">
           <i class="fa-solid fa-arrow-up-right-from-square"></i> Buka Aplikasi Live
         </a>
       </div>
 
-      <div class="space-y-3">
-        <div class="glass-panel p-3.5 rounded-xl border border-slate-700 flex items-center gap-4">
-          <div class="w-8 h-8 rounded-full bg-emerald-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0">1</div>
+      <div class="space-y-2.5">
+        <div class="glass-panel p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-emerald-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0 text-xs">1</div>
           <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">Autentikasi Login Admin</h4>
-            <p class="text-xs text-slate-300">Tunjukkan menu Login. Demokan modal konfirmasi autentikasi ("Tetap di Aplikasi" vs "Keluar Aplikasi").</p>
+            <h4 class="text-xs font-bold text-white">Autentikasi Login Admin</h4>
+            <p class="text-[11px] text-slate-300">Tunjukkan form login admin. Demokan modal konfirmasi autentikasi ("Tetap di Aplikasi" vs "Keluar Aplikasi").</p>
           </div>
         </div>
 
-        <div class="glass-panel p-3.5 rounded-xl border border-slate-700 flex items-center gap-4">
-          <div class="w-8 h-8 rounded-full bg-sky-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0">2</div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-sky-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0 text-xs">2</div>
           <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">NOC Dashboard &amp; Peta Interaktif</h4>
-            <p class="text-xs text-slate-300">Tampilkan ringkasan perangkat aktif, grafik utilisasi bandwidth 4 ISP, dan status gedung di peta kampus.</p>
+            <h4 class="text-xs font-bold text-white">NOC Dashboard &amp; Peta Interaktif</h4>
+            <p class="text-[11px] text-slate-300">Tampilkan ringkasan perangkat aktif, grafik utilisasi bandwidth 4 ISP, dan status gedung di peta kampus.</p>
           </div>
         </div>
 
-        <div class="glass-panel p-3.5 rounded-xl border border-slate-700 flex items-center gap-4">
-          <div class="w-8 h-8 rounded-full bg-amber-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0">3</div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-amber-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0 text-xs">3</div>
           <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">CRUD Inventaris &amp; Quick Ping</h4>
-            <p class="text-xs text-slate-300">Buka tab Inventaris, coba tambah atau edit perangkat, kemudian klik tombol "Quick Ping" untuk tes latensi langsung.</p>
+            <h4 class="text-xs font-bold text-white">CRUD Inventaris &amp; Quick Ping</h4>
+            <p class="text-[11px] text-slate-300">Buka tab Inventaris, coba tambah atau edit perangkat, kemudian klik tombol "Quick Ping" untuk tes latensi langsung.</p>
           </div>
         </div>
 
-        <div class="glass-panel p-3.5 rounded-xl border border-slate-700 flex items-center gap-4">
-          <div class="w-8 h-8 rounded-full bg-purple-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0">4</div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-purple-500 text-slate-900 font-extrabold flex items-center justify-center shrink-0 text-xs">4</div>
           <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">Pemberitahuan Insiden &amp; Audit Log</h4>
-            <p class="text-xs text-slate-300">Tunjukkan daftar insiden perangkat DOWN, lakukan aksi acknowledge teknisi, dan periksa riwayat audit log aktivitas.</p>
+            <h4 class="text-xs font-bold text-white">Pemberitahuan Insiden &amp; Audit Log</h4>
+            <p class="text-[11px] text-slate-300">Tunjukkan daftar insiden perangkat DOWN, lakukan aksi acknowledge teknisi, dan periksa riwayat audit log aktivitas.</p>
           </div>
         </div>
 
-        <div class="glass-panel p-3.5 rounded-xl border border-slate-700 flex items-center gap-4">
-          <div class="w-8 h-8 rounded-full bg-emerald-400 text-slate-900 font-extrabold flex items-center justify-center shrink-0">5</div>
+        <div class="glass-panel p-3 rounded-xl border border-slate-700 flex items-center gap-3">
+          <div class="w-7 h-7 rounded-full bg-emerald-400 text-slate-900 font-extrabold flex items-center justify-center shrink-0 text-xs">5</div>
           <div class="flex-1">
-            <h4 class="text-sm font-bold text-white">Multiplatform &amp; Download APK</h4>
-            <p class="text-xs text-slate-300">Buka modal "Download App", perlihatkan QR code siap scan untuk HP/Tablet, dan tunjukkan unduhan file APK Android.</p>
+            <h4 class="text-xs font-bold text-white">Multiplatform &amp; Download APK</h4>
+            <p class="text-[11px] text-slate-300">Buka modal "Download App", perlihatkan QR code siap scan untuk HP/Tablet, dan tunjukkan unduhan file APK Android.</p>
           </div>
         </div>
       </div>
     </div>
 
     <!-- ==============================================
-         SLIDE 9: KESIMPULAN & PENGEMBANGAN
+         SLIDE 14: KESIMPULAN & PENGEMBANGAN
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="9">
+    <div class="slide w-full h-full flex-col justify-center space-y-6" data-slide="14">
       <div class="border-b border-slate-800 pb-3">
         <div class="text-emerald-400 text-xs font-bold uppercase tracking-wider">Penutup</div>
         <h2 class="text-2xl md:text-3xl font-bold text-white">Kesimpulan &amp; Rencana Masa Depan</h2>
       </div>
 
       <div class="grid grid-cols-2 gap-8">
-        <!-- Kesimpulan -->
         <div class="glass-panel p-6 rounded-2xl border border-emerald-500/40">
           <div class="flex items-center gap-3 mb-4">
             <i class="fa-solid fa-circle-check text-emerald-400 text-xl"></i>
             <h3 class="text-lg font-bold text-white">Kesimpulan</h3>
           </div>
           <ul class="text-sm text-slate-300 space-y-3 leading-relaxed">
-            <li><strong>1. Keberhasilan Implementasi:</strong> UNUGHA NetWatch terbukti mampu memonitor status 28 perangkat jaringan kampus dengan data valid, aktual, dan responsif.</li>
-            <li><strong>2. Efisiensi Pengelolaan Aset:</strong> Integrasi fitur CRUD inventaris dan pengujian diagnostik Quick Ping memudahkan pemeliharaan tanpa alat terpisah.</li>
-            <li><strong>3. Kualitas &amp; Portabilitas:</strong> Kode terverifikasi dengan standar industri (Jest 100%, ESLint 0 warning, TypeScript) serta dapat dipasang di smartphone via file APK Android.</li>
+            <li><strong>1. Keberhasilan Implementasi:</strong> UNUGHA NetWatch terbukti mampu memonitor status 28 node perangkat jaringan kampus secara real-time.</li>
+            <li><strong>2. Pemodelan Sistem Lengkap:</strong> Terdokumentasi lengkap dalam Diagram Use Case, Arsitektur Antigravity, Diagram Sekuensi, dan Diagram Kelas UML.</li>
+            <li><strong>3. Kualitas &amp; Portabilitas:</strong> Kode terverifikasi dengan standar industri (Jest 100%, ESLint 0 warning, TypeScript) serta siap diakses via Android APK.</li>
           </ul>
         </div>
 
-        <!-- Rencana Pengembangan -->
         <div class="glass-panel p-6 rounded-2xl border border-sky-500/40">
           <div class="flex items-center gap-3 mb-4">
             <i class="fa-solid fa-rocket text-sky-400 text-xl"></i>
@@ -648,9 +982,9 @@
     </div>
 
     <!-- ==============================================
-         SLIDE 10: SESI TANYA JAWAB & PENUTUP
+         SLIDE 15: SESI TANYA JAWAB & PENUTUP
          ============================================== -->
-    <div class="slide w-full h-full flex-col justify-center items-center text-center space-y-6" data-slide="10">
+    <div class="slide w-full h-full flex-col justify-center items-center text-center space-y-6" data-slide="15">
       <div class="w-16 h-16 rounded-2xl bg-emerald-500/20 border border-emerald-500/40 flex items-center justify-center text-emerald-400 text-3xl">
         <i class="fa-solid fa-comments"></i>
       </div>
@@ -684,7 +1018,7 @@
   <!-- BOTTOM BAR / CONTROLS -->
   <footer class="no-print h-14 border-t border-slate-800/80 bg-slate-900/80 backdrop-blur px-6 flex items-center justify-between z-50">
     <div class="flex items-center space-x-2 text-xs text-slate-400">
-      <span id="slideCounter" class="font-bold text-emerald-400 text-sm">Slide 1 / 10</span>
+      <span id="slideCounter" class="font-bold text-emerald-400 text-sm">Slide 1 / 15</span>
       <span class="text-slate-600">|</span>
       <span>Gunakan tombol <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">←</kbd> <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">→</kbd> atau <kbd class="px-1.5 py-0.5 rounded bg-slate-800 text-slate-300 border border-slate-700">Spasi</kbd></span>
     </div>
@@ -703,35 +1037,40 @@
   <div id="overviewModal" class="fixed inset-0 bg-slate-950/85 backdrop-blur-md z-50 hidden flex-col p-8 overflow-y-auto">
     <div class="flex justify-between items-center mb-6 max-w-6xl mx-auto w-full">
       <h3 class="text-xl font-bold text-white flex items-center gap-2">
-        <i class="fa-solid fa-th-large text-emerald-400"></i> Navigasi Seluruh Slide Presentasi
+        <i class="fa-solid fa-th-large text-emerald-400"></i> Navigasi 15 Slide Presentasi Sidang
       </h3>
       <button onclick="toggleOverview()" class="text-slate-400 hover:text-white text-xl">
         <i class="fa-solid fa-xmark"></i>
       </button>
     </div>
-    <div id="overviewGrid" class="grid grid-cols-2 md:grid-cols-5 gap-4 max-w-6xl mx-auto w-full">
+    <div id="overviewGrid" class="grid grid-cols-2 md:grid-cols-5 gap-3 max-w-6xl mx-auto w-full">
       <!-- Injected via JavaScript -->
     </div>
   </div>
 
   <script>
     let currentSlide = 1;
-    const totalSlides = 10;
+    const totalSlides = 15;
     const slides = document.querySelectorAll('.slide');
     const progressBar = document.getElementById('progressBar');
     const slideCounter = document.getElementById('slideCounter');
 
     const slideTitles = [
-      "1. Judul & Identitas Penelitian",
+      "1. Judul & Identitas Sidang",
       "2. Latar Belakang & Masalah",
       "3. Rumusan Masalah & Tujuan",
-      "4. Arsitektur & Topologi Kampus",
-      "5. Fitur Utama & Keunggulan",
-      "6. Kualitas Kode & Pengujian",
-      "7. Hasil Evaluasi Telemetri",
-      "8. Skenario Live Demo Penguji",
-      "9. Kesimpulan & Masa Depan",
-      "10. Sesi Tanya Jawab (Q&A)"
+      "4. DIAGRAM USE CASE (Aktor & Kasus Penggunaan)",
+      "5. DIAGRAM ARSITEKTUR ANTIGRAVITY",
+      "6. DIAGRAM SEKUENSI (Siklus Ping & Insiden)",
+      "7. DIAGRAM KELAS UML & RELASI ENTITAS",
+      "8. Topologi Jaringan & 4 ISP Kampus",
+      "9. Empat Pilar Fitur Unggulan",
+      "10. Standar Kualitas & Metodologi Uji",
+      "11. Hasil Telemetri Aktual 4 ISP",
+      "12. Aksesibilitas Mobile & APK",
+      "13. Skenario Live Demo Penguji",
+      "14. Kesimpulan & Roadmap Masa Depan",
+      "15. Sesi Tanya Jawab (Q&A)"
     ];
 
     function showSlide(index) {
@@ -792,10 +1131,10 @@
         const slideNum = idx + 1;
         const isCurrent = slideNum === currentSlide;
         const card = document.createElement('div');
-        card.className = `p-4 rounded-xl border cursor-pointer transition ${isCurrent ? 'bg-emerald-500/20 border-emerald-400 text-white' : 'glass-panel border-slate-700 text-slate-300 hover:border-slate-500'}`;
+        card.className = `p-3 rounded-xl border cursor-pointer transition ${isCurrent ? 'bg-emerald-500/20 border-emerald-400 text-white' : 'glass-panel border-slate-700 text-slate-300 hover:border-slate-500'}`;
         card.innerHTML = `
-          <div class="text-xs font-mono text-emerald-400 mb-1">SLIDE ${slideNum}</div>
-          <div class="text-sm font-bold">${title}</div>
+          <div class="text-[10px] font-mono text-emerald-400 mb-0.5">SLIDE ${slideNum}</div>
+          <div class="text-xs font-bold leading-snug">${title}</div>
         `;
         card.onclick = () => {
           showSlide(slideNum);
