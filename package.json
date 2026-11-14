@@ -6,6 +6,7 @@
   "scripts": {
     "start": "node src/server.js",
     "dev": "nodemon src/server.js",
+    "free-port": "powershell -Command \"try { Get-NetTCPConnection -LocalPort 3000 -ErrorAction SilentlyContinue | ForEach-Object { Stop-Process -Id $_.OwningProcess -Force } } catch {}\"",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "test:modules": "node test-all-modules.js",

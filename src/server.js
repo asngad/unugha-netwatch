@@ -35,13 +35,31 @@ app.use((req, res, next) => {
 // Inisialisasi Socket.io WebSocket Provider
 socketService.init(server);
 
-// Tangani error jika port bentrok
+function startServices() {
+  monitorEngine.start();
+  bandwidthService.start();
+  hardwareService.start();
+}
+
+// Tangani error jika port bentrok (Otomatis coba port cadangan jika 3000 sibuk)
 server.on('error', (e) => {
   const err = /** @type {any} */ (e);
   if (err.code === 'EADDRINUSE') {
-    console.error(`⚠️ Port ${config.port} sedang digunakan oleh proses lain.`);
+    const fallbackPort = config.port + 1;
+    console.warn(`\n⚠️ Port ${config.port} sedang digunakan oleh proses lain.`);
+    console.log(`🔄 Mengalihkan otomatis ke port alternatif: http://localhost:${fallbackPort} ...\n`);
+    server.listen(fallbackPort, '0.0.0.0', () => {
+      console.log('====================================================');
+      console.log(`🌐 UNUGHA NetWatch - Monitoring Jaringan Kampus`);
+      console.log(`🏢 Kampus: ${config.campus.name}`);
+      console.log(`🚀 Server aktif di: http://localhost:${fallbackPort}`);
+      console.log(`📡 WebSocket siap melayani siaran real-time`);
+      console.log('====================================================');
+      startServices();
+    });
   } else {
     console.error('Server error:', e);
+    process.exit(1);
   }
 });
 
@@ -54,10 +72,7 @@ server.listen(config.port, '0.0.0.0', () => {
   console.log(`📡 WebSocket siap melayani siaran real-time`);
   console.log('====================================================');
 
-  // Mulai siklus ping otomatis, bandwidth ISP, & telemetri hardware
-  monitorEngine.start();
-  bandwidthService.start();
-  hardwareService.start();
+  startServices();
 });
 
 // Graceful Shutdown
