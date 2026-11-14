@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap');
+      text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B1120" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Subtle Grid Accent -->
+  <g opacity="0.04" stroke="#FFFFFF" stroke-width="1">
+    <line x1="0" y1="180" x2="1920" y2="180" />
+    <line x1="0" y1="360" x2="1920" y2="360" />
+    <line x1="0" y1="540" x2="1920" y2="540" />
+    <line x1="0" y1="720" x2="1920" y2="720" />
+    <line x1="0" y1="900" x2="1920" y2="900" />
+    <line x1="320" y1="0" x2="320" y2="1080" />
+    <line x1="640" y1="0" x2="640" y2="1080" />
+    <line x1="960" y1="0" x2="960" y2="1080" />
+    <line x1="1280" y1="0" x2="1280" y2="1080" />
+    <line x1="1600" y1="0" x2="1600" y2="1080" />
+  </g>
+
+  <!-- Content Layer -->
+  
+  <text x="100" y="130" fill="#10B981" font-size="16" font-weight="700" letter-spacing="1.5">TINJAUAN STRATEGIS</text>
+  <text x="100" y="180" fill="#FFFFFF" font-size="44" font-weight="800">Rumusan Masalah &amp; Tujuan Penelitian</text>
+
+  <!-- Left: Rumusan Masalah -->
+  <rect x="100" y="240" width="830" height="660" rx="20" fill="url(#cardGrad)" stroke="#38BDF8" stroke-width="1.5" />
+  <text x="150" y="320" fill="#38BDF8" font-size="26" font-weight="800">🎯 Rumusan Masalah</text>
+  
+  <g transform="translate(150, 380)">
+    <circle cx="20" cy="20" r="18" fill="#38BDF8" fill-opacity="0.2" stroke="#38BDF8" stroke-width="1.5" />
+    <text x="20" y="26" fill="#38BDF8" font-size="16" font-weight="800" text-anchor="middle">1</text>
+    <text x="60" y="20" fill="#F8FAFC" font-size="18" font-weight="600">
+      <tspan x="60" dy="0">Bagaimana merancang sistem monitoring real-time</tspan>
+      <tspan x="60" dy="28">yang mendeteksi kondisi perangkat jaringan kampus</tspan>
+      <tspan x="60" dy="28">dengan interval cepat (&lt; 15 detik)?</tspan>
+    </text>
+
+    <circle cx="20" cy="140" r="18" fill="#38BDF8" fill-opacity="0.2" stroke="#38BDF8" stroke-width="1.5" />
+    <text x="20" y="146" fill="#38BDF8" font-size="16" font-weight="800" text-anchor="middle">2</text>
+    <text x="60" y="140" fill="#F8FAFC" font-size="18" font-weight="600">
+      <tspan x="60" dy="0">Bagaimana mengintegrasikan manajemen inventaris</tspan>
+      <tspan x="60" dy="28">perangkat langsung dengan fitur pengujian diagnostik</tspan>
+      <tspan x="60" dy="28">(Quick Ping &amp; Traceroute)?</tspan>
+    </text>
+
+    <circle cx="20" cy="260" r="18" fill="#38BDF8" fill-opacity="0.2" stroke="#38BDF8" stroke-width="1.5" />
+    <text x="20" y="266" fill="#38BDF8" font-size="16" font-weight="800" text-anchor="middle">3</text>
+    <text x="60" y="260" fill="#F8FAFC" font-size="18" font-weight="600">
+      <tspan x="60" dy="0">Bagaimana menyajikan visualisasi bandwidth 4 ISP</tspan>
+      <tspan x="60" dy="28">serta menyediakan aplikasi multiplatform</tspan>
+      <tspan x="60" dy="28">(Web NOC, PWA, dan Android APK)?</tspan>
+    </text>
+  </g>
+
+  <!-- Right: Tujuan Penelitian -->
+  <rect x="990" y="240" width="830" height="660" rx="20" fill="url(#cardGrad)" stroke="#10B981" stroke-width="1.5" />
+  <text x="1040" y="320" fill="#10B981" font-size="26" font-weight="800">🏆 Tujuan Sistem UNUGHA NetWatch</text>
+
+  <g transform="translate(1040, 380)">
+    <circle cx="20" cy="20" r="18" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1.5" />
+    <text x="20" y="26" fill="#10B981" font-size="16" font-weight="800" text-anchor="middle">✓</text>
+    <text x="60" y="15" fill="#34D399" font-size="18" font-weight="700">Visibilitas NOC Terpusat</text>
+    <text x="60" y="42" fill="#CBD5E1" font-size="16">Memantau 28 node perangkat kampus otomatis setiap siklus 15 detik.</text>
+
+    <circle cx="20" cy="110" r="18" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1.5" />
+    <text x="20" y="116" fill="#10B981" font-size="16" font-weight="800" text-anchor="middle">✓</text>
+    <text x="60" y="105" fill="#34D399" font-size="18" font-weight="700">Manajemen Insiden &amp; SLA</text>
+    <text x="60" y="132" fill="#CBD5E1" font-size="16">Mencatat riwayat downtime, acknowledge insiden, dan log audit admin.</text>
+
+    <circle cx="20" cy="200" r="18" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1.5" />
+    <text x="20" y="206" fill="#10B981" font-size="16" font-weight="800" text-anchor="middle">✓</text>
+    <text x="60" y="195" fill="#34D399" font-size="18" font-weight="700">CRUD Inventaris Lengkap</text>
+    <text x="60" y="222" fill="#CBD5E1" font-size="16">Pengelolaan aset dinamis dengan validasi IP, MAC, dan Lokasi Gedung.</text>
+
+    <circle cx="20" cy="290" r="18" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1.5" />
+    <text x="20" y="296" fill="#10B981" font-size="16" font-weight="800" text-anchor="middle">✓</text>
+    <text x="60" y="285" fill="#34D399" font-size="18" font-weight="700">Akses Fleksibel Multi-Platform</text>
+    <text x="60" y="312" fill="#CBD5E1" font-size="16">Dapat diakses di PC, Tablet, dan diunduh sebagai file APK Android.</text>
+  </g>
+
+
+  <!-- Footer -->
+  <line x1="100" y1="980" x2="1820" y2="980" stroke="#334155" stroke-width="1.5" />
+  <text x="100" y="1020" fill="#64748B" font-size="16" font-weight="600">UNUGHA NetWatch • Sistem Monitoring Jaringan Kampus UNUGHA Cilacap</text>
+  <text x="1820" y="1020" fill="#10B981" font-size="16" font-weight="700" text-anchor="end">Slide 3 / 10</text>
+</svg>

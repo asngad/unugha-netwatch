@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="1920" height="1080" viewBox="0 0 1920 1080" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&amp;family=JetBrains+Mono:wght@500;700&amp;display=swap');
+      text { font-family: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif; }
+      .mono { font-family: 'JetBrains Mono', monospace; }
+    </style>
+    <linearGradient id="bgGrad" x1="0" y1="0" x2="1920" y2="1080" gradientUnits="userSpaceOnUse">
+      <stop offset="0%" stop-color="#0B1120" />
+      <stop offset="100%" stop-color="#020617" />
+    </linearGradient>
+    <linearGradient id="emeraldGrad" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%" stop-color="#10B981" />
+      <stop offset="100%" stop-color="#38BDF8" />
+    </linearGradient>
+    <linearGradient id="cardGrad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#1E293B" stop-opacity="0.9" />
+      <stop offset="100%" stop-color="#0F172A" stop-opacity="0.9" />
+    </linearGradient>
+  </defs>
+
+  <!-- Background Canvas -->
+  <rect width="1920" height="1080" fill="url(#bgGrad)" />
+
+  <!-- Subtle Grid Accent -->
+  <g opacity="0.04" stroke="#FFFFFF" stroke-width="1">
+    <line x1="0" y1="180" x2="1920" y2="180" />
+    <line x1="0" y1="360" x2="1920" y2="360" />
+    <line x1="0" y1="540" x2="1920" y2="540" />
+    <line x1="0" y1="720" x2="1920" y2="720" />
+    <line x1="0" y1="900" x2="1920" y2="900" />
+    <line x1="320" y1="0" x2="320" y2="1080" />
+    <line x1="640" y1="0" x2="640" y2="1080" />
+    <line x1="960" y1="0" x2="960" y2="1080" />
+    <line x1="1280" y1="0" x2="1280" y2="1080" />
+    <line x1="1600" y1="0" x2="1600" y2="1080" />
+  </g>
+
+  <!-- Content Layer -->
+  
+  <text x="100" y="130" fill="#10B981" font-size="16" font-weight="700" letter-spacing="1.5">DATA HASIL PENGUJIAN</text>
+  <text x="100" y="180" fill="#FFFFFF" font-size="44" font-weight="800">Telemetri Performa Aktual 4 ISP UNUGHA</text>
+
+  <!-- Telemetry Table -->
+  <g transform="translate(100, 240)">
+    <!-- Table Header -->
+    <rect x="0" y="0" width="1720" height="60" rx="12" fill="#1E293B" stroke="#334155" stroke-width="1.5" />
+    <text x="40" y="38" fill="#FFFFFF" font-size="17" font-weight="700">Nama Penyedia ISP</text>
+    <text x="420" y="38" fill="#FFFFFF" font-size="17" font-weight="700">Kapasitas Pipa</text>
+    <text x="740" y="38" fill="#FFFFFF" font-size="17" font-weight="700">Rata-rata Latensi</text>
+    <text x="1100" y="38" fill="#FFFFFF" font-size="17" font-weight="700">Uptime SLA %</text>
+    <text x="1460" y="38" fill="#FFFFFF" font-size="17" font-weight="700">Status Jalur</text>
+
+    <!-- Row 1: Citra -->
+    <rect x="0" y="75" width="1720" height="65" rx="10" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+    <text x="40" y="115" fill="#FFFFFF" font-size="18" font-weight="700">ISP Citra</text>
+    <text x="420" y="115" fill="#CBD5E1" font-size="17">100 Mbps (FO Dedicated)</text>
+    <text x="740" y="115" fill="#10B981" font-size="19" font-weight="800" class="mono">1 ms</text>
+    <text x="1100" y="115" fill="#CBD5E1" font-size="17">99.75%</text>
+    <rect x="1460" y="90" width="120" height="35" rx="6" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
+    <text x="1520" y="113" fill="#34D399" font-size="14" font-weight="800" text-anchor="middle">UP (Aktif)</text>
+
+    <!-- Row 2: Indibiz -->
+    <rect x="0" y="150" width="1720" height="65" rx="10" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+    <text x="40" y="190" fill="#FFFFFF" font-size="18" font-weight="700">ISP Telkom Indibiz</text>
+    <text x="420" y="190" fill="#CBD5E1" font-size="17">200 Mbps (Fiber Optic)</text>
+    <text x="740" y="190" fill="#10B981" font-size="19" font-weight="800" class="mono">1 ms</text>
+    <text x="1100" y="190" fill="#CBD5E1" font-size="17">99.85%</text>
+    <rect x="1460" y="165" width="120" height="35" rx="6" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
+    <text x="1520" y="188" fill="#34D399" font-size="14" font-weight="800" text-anchor="middle">UP (Aktif)</text>
+
+    <!-- Row 3: Starlink -->
+    <rect x="0" y="225" width="1720" height="65" rx="10" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+    <text x="40" y="265" fill="#FFFFFF" font-size="18" font-weight="700">ISP Starlink (LEO Satelit)</text>
+    <text x="420" y="265" fill="#CBD5E1" font-size="17">250 Mbps (Low-Latency Sat)</text>
+    <text x="740" y="265" fill="#38BDF8" font-size="19" font-weight="800" class="mono">36 ms</text>
+    <text x="1100" y="265" fill="#CBD5E1" font-size="17">99.41%</text>
+    <rect x="1460" y="240" width="120" height="35" rx="6" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
+    <text x="1520" y="263" fill="#34D399" font-size="14" font-weight="800" text-anchor="middle">UP (Aktif)</text>
+
+    <!-- Row 4: Starlite -->
+    <rect x="0" y="300" width="1720" height="65" rx="10" fill="url(#cardGrad)" stroke="#334155" stroke-width="1" />
+    <text x="40" y="340" fill="#FFFFFF" font-size="18" font-weight="700">ISP Starlite Dedicated</text>
+    <text x="420" y="340" fill="#CBD5E1" font-size="17">500 Mbps (Backbone Utama)</text>
+    <text x="740" y="340" fill="#38BDF8" font-size="19" font-weight="800" class="mono">69 ms</text>
+    <text x="1100" y="340" fill="#CBD5E1" font-size="17">99.64%</text>
+    <rect x="1460" y="315" width="120" height="35" rx="6" fill="#10B981" fill-opacity="0.2" stroke="#10B981" stroke-width="1" />
+    <text x="1520" y="338" fill="#34D399" font-size="14" font-weight="800" text-anchor="middle">UP (Aktif)</text>
+  </g>
+
+  <!-- 3 Big Metric Highlights -->
+  <g transform="translate(100, 660)">
+    <rect x="0" y="0" width="540" height="230" rx="18" fill="url(#cardGrad)" stroke="#10B981" stroke-width="1.5" />
+    <text x="270" y="80" fill="#10B981" font-size="44" font-weight="800" text-anchor="middle">&lt; 15 Detik</text>
+    <text x="270" y="130" fill="#FFFFFF" font-size="20" font-weight="700" text-anchor="middle">Kecepatan Deteksi Down</text>
+    <text x="270" y="170" fill="#94A3B8" font-size="15" text-anchor="middle">Turun drastis dari sebelumnya 30–60 menit</text>
+
+    <rect x="590" y="0" width="540" height="230" rx="18" fill="url(#cardGrad)" stroke="#38BDF8" stroke-width="1.5" />
+    <text x="860" y="80" fill="#38BDF8" font-size="44" font-weight="800" text-anchor="middle">1050 Mbps</text>
+    <text x="860" y="130" fill="#FFFFFF" font-size="20" font-weight="700" text-anchor="middle">Total Bandwidth Agregasi</text>
+    <text x="860" y="170" fill="#94A3B8" font-size="15" text-anchor="middle">Terpantau secara real-time multi-failover</text>
+
+    <rect x="1180" y="0" width="540" height="230" rx="18" fill="url(#cardGrad)" stroke="#F59E0B" stroke-width="1.5" />
+    <text x="1450" y="80" fill="#F59E0B" font-size="44" font-weight="800" text-anchor="middle">28 Perangkat</text>
+    <text x="1450" y="130" fill="#FFFFFF" font-size="20" font-weight="700" text-anchor="middle">Sinkronisasi Aset Valid</text>
+    <text x="1450" y="170" fill="#94A3B8" font-size="15" text-anchor="middle">Seluruh IP &amp; MAC terhubung live diagnostic</text>
+  </g>
+
+
+  <!-- Footer -->
+  <line x1="100" y1="980" x2="1820" y2="980" stroke="#334155" stroke-width="1.5" />
+  <text x="100" y="1020" fill="#64748B" font-size="16" font-weight="600">UNUGHA NetWatch • Sistem Monitoring Jaringan Kampus UNUGHA Cilacap</text>
+  <text x="1820" y="1020" fill="#10B981" font-size="16" font-weight="700" text-anchor="end">Slide 7 / 10</text>
+</svg>

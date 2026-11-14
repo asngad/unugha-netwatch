@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Figma Slides Hub - UNUGHA NetWatch</title>
+  <link rel="icon" type="image/svg+xml" href="/icons/favicon.svg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap');
+    body {
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      background-color: #0b1120;
+      color: #f8fafc;
+    }
+    .mono { font-family: 'JetBrains Mono', monospace; }
+  </style>
+</head>
+<body class="min-h-screen bg-[#0b1120] text-slate-100 p-6 md:p-10">
+
+  <div class="max-w-6xl mx-auto space-y-8">
+    
+    <!-- HEADER -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 border-b border-slate-800 pb-6">
+      <div>
+        <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-emerald-500/10 border border-emerald-500/30 text-emerald-400 text-xs font-bold uppercase tracking-wider mb-2">
+          <i class="fa-brands fa-figma"></i> Paket Desain Figma Siap Pakai
+        </div>
+        <h1 class="text-3xl font-extrabold text-white">Slide Presentasi Sidang untuk Figma</h1>
+        <p class="text-sm text-slate-400 mt-1">10 Frame Slide Resolusi Tinggi (1920×1080) Berformat Vector SVG Asli untuk figma.com</p>
+      </div>
+
+      <div class="flex items-center gap-3">
+        <a href="/downloads/UNUGHA-NetWatch-Figma-Slides.zip" download class="px-4 py-2.5 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-500 hover:to-teal-500 text-white font-bold text-xs flex items-center gap-2 shadow-lg shadow-emerald-900/40 transition">
+          <i class="fa-solid fa-file-zipper text-sm"></i> Download 10 Slide (.ZIP)
+        </a>
+        <a href="https://www.figma.com" target="_blank" class="px-4 py-2.5 rounded-xl bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 font-semibold text-xs flex items-center gap-2 transition">
+          <i class="fa-brands fa-figma text-amber-400 text-sm"></i> Buka Figma.com
+        </a>
+      </div>
+    </div>
+
+    <!-- PANDUAN CEPAT 3 DETIK -->
+    <div class="p-6 rounded-2xl bg-gradient-to-r from-slate-900 via-slate-800 to-slate-900 border border-slate-700/80 shadow-xl space-y-4">
+      <h3 class="text-base font-bold text-white flex items-center gap-2">
+        <span class="w-6 h-6 rounded-full bg-emerald-500 text-slate-950 flex items-center justify-center text-xs font-black">!</span>
+        Cara Memasukkan ke Figma (Tinggal Tarik &amp; Pakai):
+      </h3>
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-xs text-slate-300">
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div class="font-bold text-emerald-400 text-sm mb-1">1. Download ZIP</div>
+          <p>Klik tombol <strong>"Download 10 Slide (.ZIP)"</strong> di atas, lalu ekstrak folder ZIP tersebut di komputer Anda.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div class="font-bold text-sky-400 text-sm mb-1">2. Drag &amp; Drop ke Figma</div>
+          <p>Buka <strong>figma.com</strong> (Design File atau Figma Slides), lalu seret (drag) seluruh file <code class="text-emerald-300">.svg</code> langsung ke lembar kerja Figma.</p>
+        </div>
+        <div class="p-4 rounded-xl bg-slate-950/60 border border-slate-800">
+          <div class="font-bold text-amber-400 text-sm mb-1">3. Tekan "Present"</div>
+          <p>Figma otomatis membuat 10 Frame slide yang rapi dan bisa diedit. Klik tombol <strong>Present (Play)</strong> di pojok kanan atas untuk mulai demo!</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- DAFTAR 10 SLIDE -->
+    <div>
+      <h2 class="text-xl font-bold text-white mb-4 flex items-center gap-2">
+        <i class="fa-solid fa-layer-group text-emerald-400"></i> Koleksi 10 Slide Vector (Preview &amp; Aksi Cepat)
+      </h2>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        
+        <!-- SLIDE CARD GENERATOR -->
+        <script>
+          const slideItems = [
+            { num: 1, file: 'slide-01-cover.svg', title: '1. Cover & Identitas Sidang', desc: 'UNUGHA NetWatch, Penyaji Asngad, institusi UNUGHA Cilacap, & arsitektur full-stack.' },
+            { num: 2, file: 'slide-02-latar-belakang.svg', title: '2. Latar Belakang & Masalah', desc: 'Kompleksitas 4 ISP 1050M, penanganan reaktif 30-60 menit, & inventaris terpisah.' },
+            { num: 3, file: 'slide-03-rumusan-tujuan.svg', title: '3. Rumusan Masalah & Tujuan', desc: 'Otomasi deteksi < 15 detik, integrasi inventaris, telemetri bandwidth, & multiplatform.' },
+            { num: 4, file: 'slide-04-topologi-kampus.svg', title: '4. Arsitektur & Topologi Kampus', desc: 'Ruijie RG-EG1510XS Multi-WAN, Switch RG-NBS3100, Citra, Indibiz, Starlink, Starlite.' },
+            { num: 5, file: 'slide-05-fitur-unggulan.svg', title: '5. Empat Pilar Fitur Unggulan', desc: 'Real-time ping SLA, CRUD inventaris + Quick Ping, insiden & audit log, multiplatform PWA/APK.' },
+            { num: 6, file: 'slide-06-kualitas-pengujian.svg', title: '6. Jaminan Kualitas & Metodologi', desc: '100% lulus Jest testing (10 suites, 38 test), 0 ESLint warning, 0 TypeScript compile error.' },
+            { num: 7, file: 'slide-07-telemetri-performa.svg', title: '7. Telemetri Aktual 4 ISP UNUGHA', desc: 'Tabel latensi 1ms (Citra & Indibiz), 36ms (Starlink), 69ms (Starlite), deteksi < 15 detik.' },
+            { num: 8, file: 'slide-08-alur-demo-penguji.svg', title: '8. Skenario Demo Dewan Penguji', desc: '5 Langkah demonstrasi: Login Auth -> Dashboard Topologi -> CRUD Ping -> Insiden -> Download APK.' },
+            { num: 9, file: 'slide-09-kesimpulan-masa-depan.svg', title: '9. Kesimpulan & Roadmap Lanjutan', desc: 'Kesimpulan implementasi teruji & rencana integrasi SNMP v3/NetFlow, bot Telegram, dan AI anomaly.' },
+            { num: 10, file: 'slide-10-tanya-jawab-penutup.svg', title: '10. Sesi Tanya Jawab (Q&A) & Penutup', desc: 'Ucapan terima kasih dewan penguji, link demo localhost:3000, & repositori GitHub.' }
+          ];
+
+          document.write(slideItems.map(s => `
+            <div class="p-5 rounded-xl bg-slate-900 border border-slate-800 hover:border-slate-700 transition flex flex-col justify-between space-y-4">
+              <div>
+                <div class="flex items-center justify-between mb-2">
+                  <span class="text-xs font-mono text-emerald-400 font-bold">SLIDE ${s.num} (1920×1080)</span>
+                  <span class="text-[10px] px-2 py-0.5 rounded bg-slate-800 text-slate-400 font-mono">SVG VECTOR</span>
+                </div>
+                <h4 class="text-base font-bold text-white mb-1">${s.title}</h4>
+                <p class="text-xs text-slate-400 leading-relaxed">${s.desc}</p>
+              </div>
+
+              <div class="flex items-center gap-2 pt-2 border-t border-slate-800 text-xs">
+                <a href="/slides/${s.file}" target="_blank" class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+                  <i class="fa-solid fa-eye text-emerald-400 text-xs"></i> Lihat Slide
+                </a>
+                <a href="/slides/${s.file}" download class="px-3 py-1.5 rounded-lg bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 flex items-center gap-1.5 transition">
+                  <i class="fa-solid fa-download text-sky-400 text-xs"></i> Download SVG
+                </a>
+                <button onclick="copySvgToClipboard('/slides/${s.file}', this)" class="px-3 py-1.5 rounded-lg bg-emerald-600/20 hover:bg-emerald-600/30 text-emerald-300 border border-emerald-500/30 flex items-center gap-1.5 transition font-medium">
+                  <i class="fa-solid fa-copy text-xs"></i> <span>Copy SVG ke Figma</span>
+                </button>
+              </div>
+            </div>
+          `).join(''));
+
+          async function copySvgToClipboard(url, btn) {
+            try {
+              const res = await fetch(url);
+              const svgText = await res.text();
+              await navigator.clipboard.writeText(svgText);
+              const span = btn.querySelector('span');
+              const origText = span.innerText;
+              span.innerText = 'Tersalin! Paste di Figma';
+              btn.classList.add('bg-emerald-600', 'text-white');
+              setTimeout(() => {
+                span.innerText = origText;
+                btn.classList.remove('bg-emerald-600', 'text-white');
+              }, 2500);
+            } catch (err) {
+              alert('Gagal menyalin. Silakan download file SVG langsung.');
+            }
+          }
+        </script>
+      </div>
+    </div>
+
+    <!-- BACK TO NOC LINK -->
+    <div class="text-center pt-6 border-t border-slate-800 text-xs text-slate-500">
+      <a href="/" class="text-emerald-400 hover:underline">← Kembali ke Dashboard Monitoring UNUGHA NetWatch</a>
+      <span class="mx-2">•</span>
+      <a href="/presentation.html" class="text-sky-400 hover:underline">Buka Slide Presentasi Web Interaktif</a>
+    </div>
+
+  </div>
+
+</body>
+</html>
