@@ -5,7 +5,7 @@ const path = require('path');
 async function createPresentation() {
   const pptx = new pptxgen();
 
-  pptx.layout = 'LAYOUT_16x9'; // 13.33 x 7.5 inches
+  pptx.layout = 'LAYOUT_WIDE'; // 13.333 x 7.5 inches (Modern Widescreen 16:9 in Microsoft PowerPoint)
   pptx.title = 'Presentasi Sidang: UNUGHA NetWatch (Multi-Platform Responsive)';
   pptx.author = 'Asngad - Tim Pengembang IT UNUGHA';
   pptx.company = 'Universitas Nahdlatul Ulama Al Ghazali (UNUGHA) Cilacap';
@@ -92,36 +92,36 @@ async function createPresentation() {
 
     // Top Badge
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 1.0, y: 1.0, w: 4.8, h: 0.35,
+      x: 0.8, y: 0.75, w: 4.8, h: 0.35,
       fill: { color: '064E3B' },
       line: { color: C_EMERALD, width: 1 },
       rectRadius: 0.15
     });
     slide.addText('DEMO SISTEM & UJIAN SIDANG TUGAS AKHIR / SKRIPSI', {
-      x: 1.1, y: 1.05, w: 4.6, h: 0.25,
+      x: 0.9, y: 0.8, w: 4.6, h: 0.25,
       fontSize: 9.5, bold: true, color: '34D399', fontFace: 'Arial', align: 'center'
     });
 
-    // Title (Scaled down from 44 to 32pt so it is not oversized on laptops)
+    // Title (Proportioned to fit widescreen laptop display)
     slide.addText('UNUGHA NetWatch', {
-      x: 1.0, y: 1.45, w: 11.3, h: 0.8,
-      fontSize: 34, bold: true, color: C_WHITE, fontFace: 'Arial'
+      x: 0.8, y: 1.25, w: 11.73, h: 0.75,
+      fontSize: 32, bold: true, color: C_WHITE, fontFace: 'Arial'
     });
 
     // Subtitle
     slide.addText('Sistem Pemantauan Status Perangkat & Inventaris Jaringan Kampus Terintegrasi', {
-      x: 1.0, y: 2.3, w: 11.3, h: 0.45,
-      fontSize: 16, bold: true, color: C_SKY, fontFace: 'Arial'
+      x: 0.8, y: 2.05, w: 11.73, h: 0.4,
+      fontSize: 15, bold: true, color: C_SKY, fontFace: 'Arial'
     });
 
     slide.addText('Studi Kasus: Infrastruktur Jaringan NOC Gedung Rektorat & Kampus UNUGHA Cilacap', {
-      x: 1.0, y: 2.8, w: 11.3, h: 0.35,
-      fontSize: 13, color: C_MUTED, fontFace: 'Arial'
+      x: 0.8, y: 2.5, w: 11.73, h: 0.35,
+      fontSize: 12.5, color: C_MUTED, fontFace: 'Arial'
     });
 
-    // Info Card
+    // Info Card (Strictly within margins: x=0.8 to 12.53, y=3.0 to 6.8)
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 1.0, y: 3.4, w: 11.3, h: 3.3,
+      x: 0.8, y: 3.0, w: 11.73, h: 3.8,
       fill: { color: C_CARD },
       line: { color: C_BORDER, width: 1 },
       rectRadius: 0.08
@@ -141,8 +141,8 @@ async function createPresentation() {
       { text: 'Demo Live Sistem     : ', options: { bold: true, color: C_EMERALD } },
       { text: 'http://localhost:3000 (Mendukung Laptop, Desktop, Tablet, & Smartphone)', options: { color: C_WHITE } }
     ], {
-      x: 1.3, y: 3.6, w: 10.7, h: 2.9,
-      fontSize: 11, fontFace: 'Arial', lineSpacing: 20
+      x: 1.1, y: 3.2, w: 11.13, h: 3.4,
+      fontSize: 10.5, fontFace: 'Arial', lineSpacing: 19
     });
   }
 
@@ -1049,22 +1049,22 @@ async function createPresentation() {
     slide.background = { color: C_BG };
 
     slide.addText('SESI TANYA JAWAB (Q&A)', {
-      x: 1.0, y: 1.5, w: 11.3, h: 0.35,
+      x: 0.8, y: 1.4, w: 11.73, h: 0.35,
       fontSize: 13, bold: true, color: C_EMERALD, fontFace: 'Arial', align: 'center'
     });
 
     slide.addText('Terima Kasih', {
-      x: 1.0, y: 1.95, w: 11.3, h: 1.0,
-      fontSize: 42, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
+      x: 0.8, y: 1.85, w: 11.73, h: 1.0,
+      fontSize: 40, bold: true, color: C_WHITE, fontFace: 'Arial', align: 'center'
     });
 
     slide.addText('Dewan Dosen Penguji, Dosen Pembimbing, & Seluruh Hadirin', {
-      x: 1.0, y: 3.0, w: 11.3, h: 0.45,
+      x: 0.8, y: 2.9, w: 11.73, h: 0.45,
       fontSize: 15, color: C_SKY, fontFace: 'Arial', align: 'center'
     });
 
     slide.addShape(pptx.shapes.ROUNDED_RECTANGLE, {
-      x: 3.0, y: 3.8, w: 7.3, h: 2.6,
+      x: 2.8, y: 3.6, w: 7.73, h: 2.8,
       fill: { color: C_CARD },
       line: { color: C_BORDER, width: 1 },
       rectRadius: 0.08
@@ -1076,7 +1076,7 @@ async function createPresentation() {
       { text: '📂 Repository GitHub: https://github.com/asngad/unugha-netwatch\n', options: { color: C_SKY } },
       { text: '🏢 Universitas Nahdlatul Ulama Al Ghazali Cilacap', options: { color: C_MUTED } }
     ], {
-      x: 3.3, y: 4.1, w: 6.7, h: 2.0,
+      x: 3.0, y: 3.9, w: 7.33, h: 2.2,
       fontSize: 11, fontFace: 'Arial', align: 'center', lineSpacing: 21
     });
   }
@@ -1087,19 +1087,52 @@ async function createPresentation() {
     fs.mkdirSync(outDir, { recursive: true });
   }
 
-  const outPath = path.join(outDir, 'UNUGHA-NetWatch-Presentasi-Sidang.pptx');
+  const outPathSidang = path.join(outDir, 'UNUGHA-NetWatch-Presentasi-Sidang.pptx');
   const outPathLengkap = path.join(outDir, 'UNUGHA-NetWatch-Presentasi-Lengkap.pptx');
+  const outPathLaptop = path.join(outDir, 'UNUGHA-NetWatch-Presentasi-Laptop.pptx');
+  const outPathBiasa = path.join(outDir, 'UNUGHA-NetWatch-Presentasi.pptx');
   
-  await pptx.writeFile({ fileName: outPath });
-  fs.copyFileSync(outPath, outPathLengkap);
-  console.log('✅ File presentasi PowerPoint 15 Slide berhasil dibuat di:', outPath);
+  await pptx.writeFile({ fileName: outPathSidang });
+  fs.copyFileSync(outPathSidang, outPathLengkap);
+  fs.copyFileSync(outPathSidang, outPathLaptop);
+  try {
+    fs.copyFileSync(outPathSidang, outPathBiasa);
+  } catch (err) {
+    console.warn('Note: UNUGHA-NetWatch-Presentasi.pptx in public/downloads might be locked:', err.message);
+  }
+  console.log('✅ File presentasi PowerPoint 15 Slide berhasil dibuat di:', outPathSidang);
 
   // Sync to C:\monitoring_unugha
   const mirrorDir = path.join('C:', 'monitoring_unugha', 'public', 'downloads');
   if (fs.existsSync(mirrorDir)) {
-    fs.copyFileSync(outPath, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi-Sidang.pptx'));
-    fs.copyFileSync(outPath, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi-Lengkap.pptx'));
-    console.log('✅ File presentasi 15 Slide juga disalin ke C:\\monitoring_unugha');
+    try {
+      fs.copyFileSync(outPathSidang, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi-Sidang.pptx'));
+      fs.copyFileSync(outPathSidang, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi-Lengkap.pptx'));
+      fs.copyFileSync(outPathSidang, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi-Laptop.pptx'));
+      fs.copyFileSync(outPathSidang, path.join(mirrorDir, 'UNUGHA-NetWatch-Presentasi.pptx'));
+      console.log('✅ File presentasi 15 Slide juga disalin ke C:\\monitoring_unugha');
+    } catch (err) {
+      console.warn('Note on mirror copy:', err.message);
+    }
+  }
+
+  // Sync to User Downloads folder
+  const userDownloads = path.join('C:', 'Users', 'asnga', 'Downloads');
+  if (fs.existsSync(userDownloads)) {
+    try {
+      fs.copyFileSync(outPathSidang, path.join(userDownloads, 'UNUGHA-NetWatch-Presentasi-Sidang.pptx'));
+      fs.copyFileSync(outPathSidang, path.join(userDownloads, 'UNUGHA-NetWatch-Presentasi-Lengkap.pptx'));
+      fs.copyFileSync(outPathSidang, path.join(userDownloads, 'UNUGHA-NetWatch-Presentasi-Laptop.pptx'));
+      console.log('✅ File presentasi disalin ke C:\\Users\\asnga\\Downloads (Sidang, Lengkap, Laptop)');
+    } catch (err) {
+      console.warn('Note on user downloads copy:', err.message);
+    }
+    try {
+      fs.copyFileSync(outPathSidang, path.join(userDownloads, 'UNUGHA-NetWatch-Presentasi.pptx'));
+      console.log('✅ UNUGHA-NetWatch-Presentasi.pptx di Downloads berhasil di-update');
+    } catch (err) {
+      console.warn('Note: UNUGHA-NetWatch-Presentasi.pptx sedang dibuka di PowerPoint, silakan tutup PowerPoint untuk meng-update file tersebut.');
+    }
   }
 }
 
